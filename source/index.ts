@@ -29,7 +29,7 @@ import {sendAction, sendBackgroundAction, messengerDomain, stripTrackingFromUrl}
 import {process as processEmojiUrl} from './emoji';
 import ensureOnline from './ensure-online';
 import {setUpMenuBarMode} from './menu-bar-mode';
-import {caprineIconPath} from './constants';
+import {caprineIconPath, caprineWinIconPath} from './constants';
 
 ipc.setMaxListeners(100);
 
@@ -59,6 +59,14 @@ app.setAppUserModelId('com.sindresorhus.caprine');
 if (!config.get('hardwareAcceleration')) {
 	app.disableHardwareAcceleration();
 }
+
+if (config.get('hardwareAcceleration')) {
+	app.commandLine.appendSwitch('ignore-gpu-blocklist');
+	app.commandLine.appendSwitch('enable-gpu-rasterization');
+	app.commandLine.appendSwitch('enable-features', 'CanvasOopRasterization');
+}
+
+app.commandLine.appendSwitch('enable-quic');
 
 if (!is.development && config.get('autoUpdate')) {
 	(async () => {
@@ -289,7 +297,7 @@ function createMainWindow(): BrowserWindow {
 		y: lastWindowState.y,
 		width: lastWindowState.width,
 		height: lastWindowState.height,
-		icon: is.linux ? caprineIconPath : undefined,
+		icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
 		minWidth: 400,
 		minHeight: 200,
 		alwaysOnTop: config.get('alwaysOnTop'),
@@ -303,6 +311,9 @@ function createMainWindow(): BrowserWindow {
 			preload: path.join(__dirname, 'browser.js'),
 			contextIsolation: true,
 			nodeIntegration: true,
+			experimentalFeatures: true,
+			webviewTag: true,
+			devTools: true,
 			spellcheck: config.get('isSpellCheckerEnabled'),
 			plugins: true,
 		},
@@ -526,6 +537,9 @@ function createMainWindow(): BrowserWindow {
 						titleBarStyle: 'default',
 						webPreferences: {
 							nodeIntegration: false,
+							experimentalFeatures: true,
+							webviewTag: true,
+							devTools: true,
 							preload: path.join(__dirname, 'browser-call.js'),
 						},
 					}};

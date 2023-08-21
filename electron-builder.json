@@ -1,5 +1,5 @@
 {
-  "electronVersion": "24.7.1",
+  "electronVersion": "24.8.0",
   "files": [
     "**/*",
     "!media${/*}"

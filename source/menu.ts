@@ -448,6 +448,37 @@ Press Command/Ctrl+R in Caprine to see your changes.
 
     const viewSubmenu: MenuItemConstructorOptions[] = [
         {
+          label: 'Go Back',
+          accelerator: 'Alt+Left',
+          click() {
+            getWindow().webContents.goBack();
+          },
+        },
+        {
+          label: 'Go Forward',
+          accelerator: 'Alt+Right',
+          click() {
+            getWindow().webContents.goForward();
+          },
+        },
+        {
+          label: 'Reload',
+          accelerator: 'CmdOrCtrl+R',
+          click() {
+            getWindow().webContents.reload();
+          },
+        },
+        {
+          label: 'Force Reload',
+          accelerator: 'CmdOrCtrl+Shift+R',
+          click() {
+            getWindow().webContents.reloadIgnoringCache();
+          },
+        },
+        {
+            type: 'separator',
+        },
+        {
             label: 'Reset Text Size',
             accelerator: 'CommandOrControl+0',
             click() {
@@ -767,6 +798,23 @@ ${debugInfo()}`;
                 app.relaunch();
                 app.quit();
             },
+        },
+        {
+            type: 'separator',
+        },
+        {
+          label: 'Toggle Developer Tools',
+          accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+          click() {
+            getWindow().webContents.toggleDevTools();
+          },
+        },
+        {
+          label: 'Open Electron DevTools',
+          accelerator: process.platform === 'darwin' ? 'CmdorCtrl+Shift+F12' : 'F12',
+          click() {
+            getWindow().webContents.openDevTools({mode: 'detach'});
+          },
         },
         {
             type: 'separator',

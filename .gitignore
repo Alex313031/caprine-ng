@@ -2,6 +2,8 @@ node_modules
 yarn.lock
 /dist
 /electron/
+/release/
+/test/
 /dist-js
 mas.provisionprofile
 .vscode

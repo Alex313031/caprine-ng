@@ -40,7 +40,17 @@ electronDebug({
 
 electronDl();
 electronContextMenu({
+	showSelectAll: true,
+	showCopyImage: true,
 	showCopyImageAddress: true,
+	showSaveImageAs: true,
+	showCopyVideoAddress: true,
+	showSaveVideoAs: true,
+	showCopyLink: true,
+	showSaveLinkAs: true,
+	showInspectElement: true,
+	showLookUpSelection: true,
+	showSearchWithGoogle: true,
 	prepend(defaultActions) {
 		/*
 		TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)

@@ -943,6 +943,8 @@ ${debugInfo()}`;
                 },
                 {
                     role: 'quit',
+                    accelerator: 'CmdOrCtrl+Q',
+                    label: 'Quit Caprine',
                 },
             ],
         },

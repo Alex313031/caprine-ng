@@ -24,7 +24,7 @@
         "test": "npm run lint",
         "e": "electron .",
         "start": "tsc && electron .",
-        "dev": "tsc && electron --user-data-dir=./test .",
+        "dev": "tsc && electron --enable-logging=file --user-data-dir=./test .",
         "build": "npm run lint && electron-builder --dir",
         "clean": "rimraf ./dist && rimraf ./dist-js && rimraf ./test && rimraf ./node_modules",
         "distclean": "del-cli ./dist && del-cli ./dist-js",

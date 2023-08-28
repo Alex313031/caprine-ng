@@ -1,5 +1,5 @@
 export default {
-	conversationList: '[role=navigation] [role=grid]',
+	conversationList: '[role=navigation] [role=grid] [class="x1n2onr6"]',
 	conversationSelector: '[role=main] [role=grid]',
 	notificationCheckbox: '._374b:nth-of-type(4) ._4ng2 input',
 	rightSidebarButtons: '.rq0escxv.l9j0dhe7.du4w35lb.j83agx80.cbu4d94t.g5gj957u.f4tghd1a.ifue306u.kuivcneq.t63ysoy8 [role=button]',

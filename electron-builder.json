@@ -87,7 +87,7 @@
     ],
     "verifyUpdateCodeSignature": false,
     "icon": "build/icon.ico",
-    "artifactName": "Caprine_${version}_${arch}.${ext}"
+    "artifactName": "Caprine_win64_${version}_${arch}.${ext}"
   },
   "nsis": {
     "shortcutName": "Caprine",

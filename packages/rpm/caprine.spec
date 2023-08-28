@@ -12,7 +12,7 @@ Source1:        %{name}.desktop
 
 BuildArch:      x86_64
 BuildRequires:  npm
-BuildRequires:  nodejs >= 18.0.0
+BuildRequires:  nodejs >= 16.0.0
 
 %description
 Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.

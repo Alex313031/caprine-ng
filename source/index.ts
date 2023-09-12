@@ -29,7 +29,7 @@ import {sendAction, sendBackgroundAction, messengerDomain, stripTrackingFromUrl}
 import {process as processEmojiUrl} from './emoji';
 import ensureOnline from './ensure-online';
 import {setUpMenuBarMode} from './menu-bar-mode';
-import {caprineIconPath} from './constants';
+import {caprineIconPath, caprineWinIconPath} from './constants';
 
 ipc.setMaxListeners(100);
 
@@ -40,18 +40,50 @@ electronDebug({
 
 electronDl();
 electronContextMenu({
+	showSelectAll: true,
+	showCopyImage: true,
 	showCopyImageAddress: true,
-	prepend(defaultActions) {
-		/*
-		TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)
-		See explanation for this hacky solution here: https://github.com/sindresorhus/caprine/pull/1169
-		*/
-		defaultActions.copyLink({
-			transform: stripTrackingFromUrl,
+	showSaveImageAs: true,
+	showCopyVideoAddress: true,
+	showSaveVideoAs: true,
+	showCopyLink: true,
+	showSaveLinkAs: true,
+	showInspectElement: true,
+	showLookUpSelection: true,
+	showSearchWithGoogle: true,
+	prepend: (defaultActions, parameters) => [
+	/*
+	TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)
+	See explanation for this hacky solution here: https://github.com/sindresorhus/caprine/pull/1169
+	*/
+	defaultActions.copyLink({
+		transform: stripTrackingFromUrl,
+	}),
+	{ label: 'Open Link in New Window',
+		// Only show it when right-clicking a link
+		visible: parameters.linkURL.trim().length > 0,
+		click: () => {
+		const newWin = new BrowserWindow({
+			title: 'New Window',
+			width: 1024,
+			height: 768,
+			useContentSize: true,
+			webPreferences: {
+				nodeIntegration: false,
+				nodeIntegrationInWorker: false,
+				contextIsolation: false,
+				sandbox: false,
+				experimentalFeatures: true,
+				webviewTag: true,
+				devTools: true,
+				javascript: true,
+				plugins: true,
+			}
 		});
-
-		return [];
-	},
+		const toURL = parameters.linkURL;
+		newWin.loadURL(toURL);
+		}
+	}],
 });
 
 app.setAppUserModelId('com.sindresorhus.caprine');
@@ -59,6 +91,14 @@ app.setAppUserModelId('com.sindresorhus.caprine');
 if (!config.get('hardwareAcceleration')) {
 	app.disableHardwareAcceleration();
 }
+
+if (config.get('hardwareAcceleration')) {
+	app.commandLine.appendSwitch('ignore-gpu-blocklist');
+	app.commandLine.appendSwitch('enable-gpu-rasterization');
+	app.commandLine.appendSwitch('enable-features', 'CanvasOopRasterization');
+}
+
+app.commandLine.appendSwitch('enable-quic');
 
 if (!is.development && config.get('autoUpdate')) {
 	(async () => {
@@ -268,7 +308,7 @@ function createMainWindow(): BrowserWindow {
 		y: lastWindowState.y,
 		width: lastWindowState.width,
 		height: lastWindowState.height,
-		icon: is.linux ? caprineIconPath : undefined,
+		icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
 		minWidth: 400,
 		minHeight: 200,
 		alwaysOnTop: config.get('alwaysOnTop'),
@@ -282,6 +322,9 @@ function createMainWindow(): BrowserWindow {
 			preload: path.join(__dirname, 'browser.js'),
 			contextIsolation: true,
 			nodeIntegration: true,
+			experimentalFeatures: true,
+			webviewTag: true,
+			devTools: true,
 			spellcheck: config.get('isSpellCheckerEnabled'),
 			plugins: true,
 		},
@@ -505,6 +548,9 @@ function createMainWindow(): BrowserWindow {
 						titleBarStyle: 'default',
 						webPreferences: {
 							nodeIntegration: false,
+							experimentalFeatures: true,
+							webviewTag: true,
+							devTools: true,
 							preload: path.join(__dirname, 'browser-call.js'),
 						},
 					}};
@@ -614,6 +660,11 @@ const notifications = new Map();
 ipc.answerRenderer(
 	'notification',
 	({id, title, body, icon, silent}: {id: number; title: string; body: string; icon: string; silent: boolean}) => {
+		// Don't send notifications when the window is focused
+		if (mainWindow.isFocused()) {
+			return;
+		}
+
 		const notification = new Notification({
 			title,
 			body: config.get('notificationMessagePreview') ? body : 'You have a new message',

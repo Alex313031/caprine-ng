@@ -59,7 +59,7 @@ electronContextMenu({
 	defaultActions.copyLink({
 		transform: stripTrackingFromUrl,
 	}),
-	{ label: 'Open Link in New Window',
+	{label: 'Open Link in New Window',
 		// Only show it when right-clicking a link
 		visible: parameters.linkURL.trim().length > 0,
 		click: () => {
@@ -78,12 +78,13 @@ electronContextMenu({
 				devTools: true,
 				javascript: true,
 				plugins: true,
-			}
+			},
 		});
 		const toURL = parameters.linkURL;
 		newWin.loadURL(toURL);
-		}
-	}],
+		},
+	},
+	],
 });
 
 app.setAppUserModelId('com.sindresorhus.caprine');

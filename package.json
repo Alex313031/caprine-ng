@@ -92,6 +92,7 @@
             "@typescript-eslint/no-var-requires": "off",
             "n/file-extension-in-import": "off",
             "n/prefer-global/process": "warn",
+            "object-shorthand": "warn",
             "padding-line-between-statements": "warn",
             "semi": "warn",
             "@typescript-eslint/naming-convention": "off",

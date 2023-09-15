@@ -72,7 +72,6 @@ electronContextMenu({
 				nodeIntegration: false,
 				nodeIntegrationInWorker: false,
 				contextIsolation: false,
-				sandbox: false,
 				experimentalFeatures: true,
 				webviewTag: true,
 				devTools: true,

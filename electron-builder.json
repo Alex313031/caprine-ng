@@ -1,11 +1,12 @@
 {
-  "electronVersion": "22.3.23",
+  "electronVersion": "22.3.24",
   "files": [
     "**/*",
     "!media${/*}"
   ],
   "asarUnpack": [
     "static/Icon.png",
+    "static/Icon64.png",
     "static/icon.ico"
   ],
   "appId": "com.alex313031.caprine",

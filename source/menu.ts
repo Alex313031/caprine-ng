@@ -14,7 +14,7 @@ import getSpellCheckerLanguages from './spell-checker';
 import {sendAction, showRestartDialog, getWindow, toggleTrayIcon, toggleLaunchMinimized} from './util';
 import {generateSubmenu as generateEmojiSubmenu} from './emoji';
 import {toggleMenuBarMode} from './menu-bar-mode';
-import {caprineIconPath} from './constants';
+import {caprineIconPath, caprineIcon64Path, caprineWinIconPath} from './constants';
 
 export default async function updateMenu(): Promise<Menu> {
 	const newConversationItem: MenuItemConstructorOptions = {
@@ -753,6 +753,7 @@ ${debugInfo()}`;
 					width: 300,
 					height: 230,
 					title: 'Versions',
+					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
 					webPreferences: {
 						nodeIntegration: false,
 						nodeIntegrationInWorker: false,
@@ -771,7 +772,7 @@ ${debugInfo()}`;
 				},
 			},
 			aboutMenuItem({
-				icon: caprineIconPath,
+				icon: caprineIcon64Path,
 				copyright: 'Created by Sindre Sorhus',
 				text: 'Maintainers:\nAlex313031\nDušan Simić\nLefteris Garyfalakis\nMichael Quevillon\nNikolas Spiridakis',
 				website: 'https://sindresorhus.com/caprine',
@@ -816,16 +817,17 @@ ${debugInfo()}`;
 		},
 		{
 			label: 'Toggle Developer Tools',
-			accelerator: process.platform === 'darwin' ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+			accelerator: is.macos ? 'Alt+Command+I' : 'Ctrl+Shift+I',
 			click() {
 				getWindow().webContents.toggleDevTools();
 			},
 		},
 		{
 			label: 'Open Electron DevTools',
-			accelerator: process.platform === 'darwin' ? 'CmdorCtrl+Shift+F12' : 'F12',
+			accelerator: is.macos ? 'CmdorCtrl+Shift+F12' : 'F12',
 			click() {
-				getWindow().webContents.openDevTools({mode: 'detach'});
+				// @ts-expect-error
+				BrowserWindow.getFocusedWindow().openDevTools({mode: 'detach'});
 			},
 		},
 		{
@@ -841,7 +843,6 @@ ${debugInfo()}`;
 					nodeIntegration: false,
 					nodeIntegrationInWorker: false,
 					contextIsolation: false,
-					sandbox: false,
 					experimentalFeatures: true,
 					webviewTag: true,
 					devTools: true,

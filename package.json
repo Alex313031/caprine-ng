@@ -29,7 +29,9 @@
         "clean": "rimraf ./dist && rimraf ./dist-js && rimraf ./test && rimraf ./node_modules",
         "distclean": "del-cli ./dist && del-cli ./dist-js",
         "burn": "rimraf package-lock.json",
-        "dist": "npm run lint && electron-builder",
+        "distLinux": "electron-builder -l",
+        "distWin": "electron-builder -w --x64 && electron-builder -w --ia32",
+        "distMac": "electron-builder -m --x64 && electron-builder -m --arm64",
         "release": "tsc && np"
     },
     "dependencies": {

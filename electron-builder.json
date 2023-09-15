@@ -84,6 +84,7 @@
   "win": {
     "target": [
       "zip",
+      "portable",
       "nsis"
     ],
     "verifyUpdateCodeSignature": false,
@@ -95,5 +96,8 @@
     "artifactName": "Caprine_Setup_${version}_${arch}.${ext}",
     "deleteAppDataOnUninstall": true,
     "uninstallDisplayName": "Caprine ${version}"
-  }
+  },
+  "portable": {
+    "artifactName": "Caprine_win64_portable_${version}_${arch}.${ext}"
+  },
 }

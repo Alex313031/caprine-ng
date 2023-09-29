@@ -843,6 +843,7 @@ ${debugInfo()}`;
 					nodeIntegration: false,
 					nodeIntegrationInWorker: false,
 					contextIsolation: false,
+					sandbox: true,
 					experimentalFeatures: true,
 					webviewTag: true,
 					devTools: true,

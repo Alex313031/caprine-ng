@@ -1,6 +1,6 @@
 import * as path from 'node:path';
 import {existsSync, writeFileSync} from 'node:fs';
-import {app, shell, Menu, MenuItemConstructorOptions, dialog} from 'electron';
+import {app, BrowserWindow, shell, Menu, MenuItemConstructorOptions, dialog} from 'electron';
 import {
 	is,
 	appMenu,
@@ -14,7 +14,7 @@ import getSpellCheckerLanguages from './spell-checker';
 import {sendAction, showRestartDialog, getWindow, toggleTrayIcon, toggleLaunchMinimized} from './util';
 import {generateSubmenu as generateEmojiSubmenu} from './emoji';
 import {toggleMenuBarMode} from './menu-bar-mode';
-import {caprineIconPath} from './constants';
+import {caprineIconPath, caprineIcon64Path, caprineWinIconPath} from './constants';
 
 export default async function updateMenu(): Promise<Menu> {
 	const newConversationItem: MenuItemConstructorOptions = {
@@ -228,7 +228,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix privacy features */
 			/* If you want to help, see #1688 */
 			label: 'Privacy',
-			visible: is.development,
+			visible: true,
 			submenu: privacySubmenu,
 		},
 		{
@@ -250,7 +250,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			label: 'Autoplay Videos',
 			id: 'video-autoplay',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('autoplayVideos'),
 			click() {
 				config.set('autoplayVideos', !config.get('autoplayVideos'));
@@ -261,7 +261,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix notifications */
 			label: 'Show Message Preview in Notifications',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('notificationMessagePreview'),
 			click(menuItem) {
 				config.set('notificationMessagePreview', menuItem.checked);
@@ -272,7 +272,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			label: 'Mute Notifications',
 			id: 'mute-notifications',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('notificationsMuted'),
 			click() {
 				sendAction('toggle-mute-notifications');
@@ -290,7 +290,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix notification badge */
 			label: 'Show Unread Badge',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('showUnreadBadge'),
 			click() {
 				config.set('showUnreadBadge', !config.get('showUnreadBadge'));
@@ -404,7 +404,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix notifications */
 			label: 'Flash Window on Message',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('flashWindowOnMessage'),
 			click(menuItem) {
 				config.set('flashWindowOnMessage', menuItem.checked);
@@ -447,6 +447,37 @@ Press Command/Ctrl+R in Caprine to see your changes.
 	];
 
 	const viewSubmenu: MenuItemConstructorOptions[] = [
+		{
+			label: 'Go Back',
+			accelerator: 'Alt+Left',
+			click() {
+				getWindow().webContents.goBack();
+			},
+		},
+		{
+			label: 'Go Forward',
+			accelerator: 'Alt+Right',
+			click() {
+				getWindow().webContents.goForward();
+			},
+		},
+		{
+			label: 'Reload',
+			accelerator: 'CmdOrCtrl+R',
+			click() {
+				getWindow().webContents.reload();
+			},
+		},
+		{
+			label: 'Force Reload',
+			accelerator: 'CmdOrCtrl+Shift+R',
+			click() {
+				getWindow().webContents.reloadIgnoringCache();
+			},
+		},
+		{
+			type: 'separator',
+		},
 		{
 			label: 'Reset Text Size',
 			accelerator: 'CommandOrControl+0',
@@ -574,7 +605,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 		{
 			/* TODO: Fix conversation controls */
 			label: 'Mute Conversation',
-			visible: is.development,
+			visible: true,
 			accelerator: 'CommandOrControl+Shift+M',
 			click() {
 				sendAction('mute-conversation');
@@ -583,7 +614,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 		{
 			/* TODO: Fix conversation controls */
 			label: 'Hide Conversation',
-			visible: is.development,
+			visible: true,
 			accelerator: 'CommandOrControl+Shift+H',
 			click() {
 				sendAction('hide-conversation');
@@ -592,7 +623,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 		{
 			/* TODO: Fix conversation controls */
 			label: 'Delete Conversation',
-			visible: is.development,
+			visible: true,
 			accelerator: 'CommandOrControl+Shift+D',
 			click() {
 				sendAction('delete-conversation');
@@ -601,7 +632,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 		{
 			/* TODO: Fix conversation controls */
 			label: 'Select Next Conversation',
-			visible: is.development,
+			visible: true,
 			accelerator: 'Control+Tab',
 			click() {
 				sendAction('next-conversation');
@@ -610,7 +641,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 		{
 			/* TODO: Fix conversation controls */
 			label: 'Select Previous Conversation',
-			visible: is.development,
+			visible: true,
 			accelerator: 'Control+Shift+Tab',
 			click() {
 				sendAction('previous-conversation');
@@ -626,7 +657,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 		{
 			/* TODO: Fix conversation controls */
 			label: 'Search in Conversation',
-			visible: is.development,
+			visible: true,
 			accelerator: 'CommandOrControl+F',
 			click() {
 				sendAction('search');
@@ -715,10 +746,35 @@ ${debugInfo()}`;
 			{
 				type: 'separator',
 			},
+			{
+				label: 'Show Versions',
+				click() {
+				const verWindow = new BrowserWindow({
+					width: 300,
+					height: 230,
+					title: 'Versions',
+					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						contextIsolation: false,
+						sandbox: false,
+						experimentalFeatures: true,
+						webviewTag: true,
+						devTools: true,
+						javascript: true,
+						plugins: true,
+						preload: path.join(__dirname, '..', 'static/preload.js'),
+					},
+				});
+				require('@electron/remote/main').enable(verWindow.webContents);
+				verWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
+				},
+			},
 			aboutMenuItem({
-				icon: caprineIconPath,
+				icon: caprineIcon64Path,
 				copyright: 'Created by Sindre Sorhus',
-				text: 'Maintainers:\nDušan Simić\nLefteris Garyfalakis\nMichael Quevillon\nNikolas Spiridakis',
+				text: 'Maintainers:\nAlex313031\nDušan Simić\nLefteris Garyfalakis\nMichael Quevillon\nNikolas Spiridakis',
 				website: 'https://sindresorhus.com/caprine',
 			}),
 		);
@@ -754,6 +810,47 @@ ${debugInfo()}`;
 				shell.trashItem(app.getPath('userData'));
 				app.relaunch();
 				app.quit();
+			},
+		},
+		{
+			type: 'separator',
+		},
+		{
+			label: 'Toggle Developer Tools',
+			accelerator: is.macos ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+			click() {
+				getWindow().webContents.toggleDevTools();
+			},
+		},
+		{
+			label: 'Open Electron DevTools',
+			accelerator: is.macos ? 'CmdorCtrl+Shift+F12' : 'F12',
+			click() {
+				// @ts-expect-error
+				BrowserWindow.getFocusedWindow().openDevTools({mode: 'detach'});
+			},
+		},
+		{
+			type: 'separator',
+		},
+		{
+			label: 'Open chrome://gpu',
+			click() {
+			const gpuWindow = new BrowserWindow({
+				width: 1024,
+				height: 768,
+				webPreferences: {
+					nodeIntegration: false,
+					nodeIntegrationInWorker: false,
+					contextIsolation: false,
+					experimentalFeatures: true,
+					webviewTag: true,
+					devTools: true,
+					javascript: true,
+					plugins: true,
+				},
+			});
+			gpuWindow.loadURL('chrome://gpu');
 			},
 		},
 	];
@@ -814,6 +911,10 @@ ${debugInfo()}`;
 			role: 'windowMenu',
 		},
 		{
+			label: 'Debug',
+			submenu: debugSubmenu,
+		},
+		{
 			role: 'help',
 			submenu: helpSubmenu,
 		},
@@ -822,6 +923,7 @@ ${debugInfo()}`;
 	const linuxWindowsTemplate: MenuItemConstructorOptions[] = [
 		{
 			role: 'fileMenu',
+			label: 'Caprine',
 			submenu: [
 				newConversationItem,
 				newRoomItem,
@@ -855,11 +957,25 @@ ${debugInfo()}`;
 				},
 				{
 					role: 'quit',
+					accelerator: 'CmdOrCtrl+Q',
+					label: 'Quit Caprine',
 				},
 			],
 		},
 		{
 			role: 'editMenu',
+			submenu: [
+			{ role: 'undo' },
+			{ role: 'redo' },
+			{ type: 'separator' },
+			{ role: 'cut' },
+			{ role: 'copy' },
+			{ role: 'paste' },
+			{ role: 'pasteAndMatchStyle' },
+			{ role: 'delete' },
+			{ type: 'separator' },
+			{ role: 'selectAll' }
+			],
 		},
 		{
 			role: 'viewMenu',
@@ -870,6 +986,10 @@ ${debugInfo()}`;
 			submenu: conversationSubmenu,
 		},
 		{
+			label: 'Debug',
+			submenu: debugSubmenu,
+		},
+		{
 			role: 'help',
 			submenu: helpSubmenu,
 		},
@@ -877,12 +997,12 @@ ${debugInfo()}`;
 
 	const template = is.macos ? macosTemplate : linuxWindowsTemplate;
 
-	if (is.development) {
+	/* if (is.development) {
 		template.push({
 			label: 'Debug',
 			submenu: debugSubmenu,
 		});
-	}
+	} */
 
 	const menu = Menu.buildFromTemplate(template);
 	Menu.setApplicationMenu(menu);

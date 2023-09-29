@@ -50,15 +50,15 @@
         "is-online": "^9.0.1",
         "json-schema-typed": "^8.0.1",
         "lodash": "^4.17.21",
-        "npm-check-updates": "^16.13.2",
+        "npm-check-updates": "^16.14.4",
         "p-wait-for": "^3.2.0"
     },
     "devDependencies": {
         "@sindresorhus/tsconfig": "^0.7.0",
         "@types/electron-localshortcut": "^3.1.0",
         "@types/facebook-locales": "^1.0.0",
-        "@types/lodash": "^4.14.197",
-        "del-cli": "^5.0.1",
+        "@types/lodash": "^4.14.199",
+        "del-cli": "^5.1.0",
         "electron": "22.3.25",
         "electron-builder": "^23.6.0",
         "husky": "^8.0.3",

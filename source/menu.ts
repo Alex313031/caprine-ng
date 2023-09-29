@@ -966,16 +966,16 @@ ${debugInfo()}`;
 		{
 			role: 'editMenu',
 			submenu: [
-			{ role: 'undo' },
-			{ role: 'redo' },
-			{ type: 'separator' },
-			{ role: 'cut' },
-			{ role: 'copy' },
-			{ role: 'paste' },
-			{ role: 'pasteAndMatchStyle' },
-			{ role: 'delete' },
-			{ type: 'separator' },
-			{ role: 'selectAll' }
+			{role: 'undo'},
+			{role: 'redo'},
+			{type: 'separator'},
+			{role: 'cut'},
+			{role: 'copy'},
+			{role: 'paste'},
+			{role: 'pasteAndMatchStyle'},
+			{role: 'delete'},
+			{type: 'separator'},
+			{role: 'selectAll'},
 			],
 		},
 		{

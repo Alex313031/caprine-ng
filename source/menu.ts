@@ -751,7 +751,7 @@ ${debugInfo()}`;
 				click() {
 				const verWindow = new BrowserWindow({
 					width: 280,
-					height: 192,
+					height: 178,
 					useContentSize: true,
 					title: 'Versions',
 					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,

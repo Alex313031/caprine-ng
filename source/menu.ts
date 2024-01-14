@@ -753,6 +753,7 @@ ${debugInfo()}`;
 					width: 280,
 					height: 174,
 					useContentSize: true,
+					autoHideMenuBar: true,
 					title: 'Versions',
 					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
 					webPreferences: {
@@ -763,8 +764,6 @@ ${debugInfo()}`;
 						experimentalFeatures: true,
 						webviewTag: true,
 						devTools: true,
-						javascript: true,
-						plugins: true,
 						preload: path.join(__dirname, '..', 'static/preload.js'),
 					},
 				});

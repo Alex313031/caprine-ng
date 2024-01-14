@@ -807,8 +807,9 @@ ${debugInfo()}`;
 		{
 			label: 'Delete App Data',
 			click() {
-				shell.trashItem(app.getPath('userData'));
+				// Emit this first, otherwise we get a crash in the main process.
 				app.relaunch();
+				shell.trashItem(app.getPath('userData'));
 				app.quit();
 			},
 		},

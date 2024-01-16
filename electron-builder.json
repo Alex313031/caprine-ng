@@ -101,6 +101,6 @@
     "allowToChangeInstallationDirectory": true
   },
   "portable": {
-    "artifactName": "Caprine_win64_portable_${version}_${arch}.${ext}"
+    "artifactName": "Caprine_portable_win64_${version}_${arch}.${ext}"
   },
 }

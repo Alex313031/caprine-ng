@@ -886,6 +886,7 @@ ${debugInfo()}`;
 		]),
 		{
 			role: 'fileMenu',
+			label: 'Caprine',
 			submenu: [
 				newConversationItem,
 				newRoomItem,

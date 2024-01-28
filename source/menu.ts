@@ -741,44 +741,43 @@ ${debugInfo()}`;
 		},
 	];
 
-	if (!is.macos) {
-		helpSubmenu.push(
-			{
-				type: 'separator',
-			},
-			{
-				label: 'Show Versions',
-				click() {
-				const verWindow = new BrowserWindow({
-					width: 280,
-					height: 174,
-					useContentSize: true,
-					autoHideMenuBar: true,
-					title: 'Versions',
-					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
-					webPreferences: {
-						nodeIntegration: false,
-						nodeIntegrationInWorker: false,
-						contextIsolation: false,
-						sandbox: false,
-						experimentalFeatures: true,
-						webviewTag: true,
-						devTools: true,
-						preload: path.join(__dirname, '..', 'static/preload.js'),
-					},
-				});
-				require('@electron/remote/main').enable(verWindow.webContents);
-				verWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
+	helpSubmenu.push(
+		{
+			type: 'separator',
+		},
+		{
+			label: 'Show Versions',
+			click() {
+			const verWindow = new BrowserWindow({
+				width: 280,
+				height: 174,
+				useContentSize: true,
+				autoHideMenuBar: true,
+				maximizable: false,
+				title: 'Versions',
+				icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
+				webPreferences: {
+					nodeIntegration: false,
+					nodeIntegrationInWorker: false,
+					contextIsolation: false,
+					sandbox: false,
+					experimentalFeatures: true,
+					webviewTag: true,
+					devTools: true,
+					preload: path.join(__dirname, '..', 'static/preload.js'),
 				},
+			});
+			require('@electron/remote/main').enable(verWindow.webContents);
+			verWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
 			},
-			aboutMenuItem({
-				icon: caprineIcon64Path,
-				copyright: 'Created by Sindre Sorhus',
-				text: 'Maintainers:\nAlex313031\nDušan Simić\nLefteris Garyfalakis\nMichael Quevillon\nNikolas Spiridakis',
-				website: 'https://sindresorhus.com/caprine',
-			}),
-		);
-	}
+		},
+		aboutMenuItem({
+			icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
+			copyright: 'Created by Sindre Sorhus',
+			text: 'Maintainers:\nAlex313031\nDušan Simić\nLefteris Garyfalakis\nMichael Quevillon\nNikolas Spiridakis',
+			website: 'https://sindresorhus.com/caprine',
+		}),
+	);
 
 	const debugSubmenu: MenuItemConstructorOptions[] = [
 		{

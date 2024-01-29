@@ -35,7 +35,7 @@
         "release": "tsc && np"
     },
     "dependencies": {
-        "@electron/remote": "^2.1.1",
+        "@electron/remote": "^2.1.2",
         "@sindresorhus/do-not-disturb": "^1.1.0",
         "electron-better-ipc": "^2.0.1",
         "electron-context-menu": "^3.6.1",
@@ -63,7 +63,7 @@
         "electron-builder": "^23.6.0",
         "husky": "^8.0.3",
         "np": "^7.7.0",
-        "patch-package": "^6.5.1",
+        "patch-package": "^7.0.2",
         "rimraf": "^3.0.2",
         "stylelint": "^14.16.1",
         "stylelint-config-xo": "^0.21.1",

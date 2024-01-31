@@ -802,8 +802,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 	observeThemeBugs();
 
 	// fix hidden image preview
-	var observer = new MutationObserver(function () {
-		var target = document.documentElement;
+	const observer = new MutationObserver(() => {
+		const target = document.documentElement;
 		if (target.classList.contains('hide-preferences-window')) {
 			target.classList.remove('hide-preferences-window');
 		}

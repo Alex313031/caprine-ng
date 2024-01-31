@@ -73,7 +73,7 @@ electronContextMenu({
 				nodeIntegration: false,
 				nodeIntegrationInWorker: false,
 				experimentalFeatures: true,
-				devTools: true
+				devTools: true,
 			},
 		});
 		const toURL = parameters.linkURL;
@@ -94,12 +94,12 @@ electronContextMenu({
 				nodeIntegration: false,
 				nodeIntegrationInWorker: false,
 				experimentalFeatures: true,
-				devTools: true
+				devTools: true,
 			},
 		});
 		const vidURL = parameters.srcURL;
 		newWin.loadURL(vidURL);
-		}
+		},
 	},
 	],
 });
@@ -399,7 +399,7 @@ function createMainWindow(): BrowserWindow {
 	});
 
 	win.on('app-command', (_event, command) => {
-		console.log('app-command: ' + command)
+		console.log('app-command: ' + command);
 		if (command === 'close') {
 			tray.destroy();
 			app.quit();

@@ -7,7 +7,7 @@ import {toggleMenuBarMode} from './menu-bar-mode';
 let tray: Tray | undefined;
 let previousMessageCount = 0;
 let badgeBlinkInterval: any = null;
-let badgeLinkState: boolean = false;
+let badgeLinkState = false;
 
 let contextMenu: Menu;
 
@@ -128,8 +128,9 @@ export default {
 			clearInterval(badgeBlinkInterval);
 			badgeBlinkInterval = null;
 		}
+
 		if (messageCount > 0) {
-			badgeBlinkInterval = setInterval(function () {
+			badgeBlinkInterval = setInterval(() => {
 				if (tray) {
 					tray.setImage(getIconPath(badgeLinkState));
 					badgeLinkState = !badgeLinkState;

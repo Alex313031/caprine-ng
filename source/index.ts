@@ -59,7 +59,8 @@ electronContextMenu({
 	defaultActions.copyLink({
 		transform: stripTrackingFromUrl,
 	}),
-	{label: 'Open Link in New Window',
+	{
+		label: 'Open Link in New Window',
 		// Only show it when right-clicking a link
 		visible: parameters.linkURL.trim().length > 0,
 		click: () => {
@@ -585,8 +586,8 @@ function createMainWindow(): BrowserWindow {
 			}
 
 			if (
-				// Example: https://company-name.facebook.com/login or
-				//   		https://company-name.workplace.com/login
+				//	Example: https://company-name.facebook.com/login or
+				//	https://company-name.workplace.com/login
 				(hostname.endsWith('.facebook.com') || hostname.endsWith('.workplace.com'))
 				&& (pathname.startsWith('/login') || pathname.startsWith('/chat'))
 			) {

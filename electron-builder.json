@@ -49,7 +49,7 @@
       "deb",
       "zip"
     ],
-    "icon": "build/icons/",
+    "icon": "build/icons",
     "maintainer": "Alex313031",
     "vendor": "Alex313031",
     "synopsis": "Elegant Facebook Messenger desktop app",

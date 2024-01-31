@@ -6,6 +6,8 @@ import {toggleMenuBarMode} from './menu-bar-mode';
 
 let tray: Tray | undefined;
 let previousMessageCount = 0;
+let badgeBlinkInterval: any = null;
+let badgeLinkState: boolean = false;
 
 let contextMenu: Menu;
 
@@ -120,6 +122,21 @@ export default {
 		}
 
 		previousMessageCount = messageCount;
+
+		// Fix annoying amount of blinking
+		if (badgeBlinkInterval) {
+			clearInterval(badgeBlinkInterval);
+			badgeBlinkInterval = null;
+		}
+		if (messageCount > 0) {
+			badgeBlinkInterval = setInterval(function () {
+				if (tray) {
+					tray.setImage(getIconPath(badgeLinkState));
+					badgeLinkState = !badgeLinkState;
+				}
+			}, 1000);
+		}
+
 		tray.setImage(getIconPath(messageCount > 0));
 		updateToolTip(messageCount);
 	},

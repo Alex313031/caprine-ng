@@ -800,6 +800,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// Hook broken dark mode observer
 	observeThemeBugs();
+
+	// fix hidden image preview
+	var observer = new MutationObserver(function () {
+		var target = document.documentElement;
+		if (target.classList.contains('hide-preferences-window')) {
+			target.classList.remove('hide-preferences-window');
+		}
+	});
+	observer.observe(document.documentElement, {attributes: true, childList: true, subtree: true});
 });
 
 // Handle title bar double-click.

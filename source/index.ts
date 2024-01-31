@@ -72,17 +72,34 @@ electronContextMenu({
 			webPreferences: {
 				nodeIntegration: false,
 				nodeIntegrationInWorker: false,
-				contextIsolation: false,
 				experimentalFeatures: true,
-				webviewTag: true,
-				devTools: true,
-				javascript: true,
-				plugins: true,
+				devTools: true
 			},
 		});
 		const toURL = parameters.linkURL;
 		newWin.loadURL(toURL);
 		},
+	},
+	{
+		label: 'Open Video in New Window',
+		// Only show it when right-clicking video
+		visible: parameters.mediaType === 'video',
+		click: () => {
+		const newWin = new BrowserWindow({
+			title: 'New Window',
+			width: 1024,
+			height: 768,
+			useContentSize: true,
+			webPreferences: {
+				nodeIntegration: false,
+				nodeIntegrationInWorker: false,
+				experimentalFeatures: true,
+				devTools: true
+			},
+		});
+		const vidURL = parameters.srcURL;
+		newWin.loadURL(vidURL);
+		}
 	},
 	],
 });
@@ -378,6 +395,16 @@ function createMainWindow(): BrowserWindow {
 			} else {
 				win.hide();
 			}
+		}
+	});
+
+	win.on('app-command', (_event, command) => {
+		console.log('app-command: ' + command)
+		if (command === 'close') {
+			tray.destroy();
+			app.quit();
+		} else if (command === 'browser-refresh') {
+			win.reload();
 		}
 	});
 

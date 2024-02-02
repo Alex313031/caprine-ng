@@ -10,6 +10,7 @@
     "static/icon.ico"
   ],
   "appId": "com.alex313031.caprine",
+  "copyright": "Copyright © 2024 Alex313031",
   "mac": {
     "category": "public.app-category.social-networking",
     "icon": "build/icon.icns",

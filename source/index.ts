@@ -69,6 +69,7 @@ electronContextMenu({
 			width: 1024,
 			height: 768,
 			useContentSize: true,
+			darkTheme: darkMode.isEnabled,
 			webPreferences: {
 				nodeIntegration: false,
 				nodeIntegrationInWorker: false,
@@ -90,6 +91,7 @@ electronContextMenu({
 			width: 1024,
 			height: 768,
 			useContentSize: true,
+			darkTheme: darkMode.isEnabled,
 			webPreferences: {
 				nodeIntegration: false,
 				nodeIntegrationInWorker: false,

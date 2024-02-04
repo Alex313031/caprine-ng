@@ -57,7 +57,7 @@ install -Dm644 license %{buildroot}%{_datadir}/licenses/%{name}
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
-* Mon Jan 31 2024 Alex313031 <alex313031@gmail.com> - 2.59.3-1
+* Mon Feb 4 2024 Alex313031 <alex313031@gmail.com> - 2.59.3-1
 - Release 2.59.3
 * Mon Jan 15 2024 Alex313031 <alex313031@gmail.com> - 2.59.2-1
 - Release 2.59.2

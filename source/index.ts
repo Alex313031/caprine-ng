@@ -107,8 +107,10 @@ electronContextMenu({
 		// Only show it when right-clicking an image
 		visible: parameters.mediaType === 'image',
 		click: () => {
+		const imgURL = parameters.srcURL;
+		const imgTitle = imgURL.substring(imgURL.lastIndexOf('/') + 1);
 		const imgWin = new BrowserWindow({
-			title: 'New Window',
+			title: imgTitle,
 			useContentSize: true,
 			darkTheme: darkMode.isEnabled,
 			webPreferences: {
@@ -116,9 +118,8 @@ electronContextMenu({
 				nodeIntegrationInWorker: false,
 				experimentalFeatures: true,
 				devTools: true,
-		},
+			},
 		});
-		const imgURL = parameters.srcURL;
 		imgWin.loadURL(imgURL);
 		},
 	},
@@ -127,8 +128,8 @@ electronContextMenu({
 		// Only show it when right-clicking video
 		visible: parameters.mediaType === 'video',
 		click: () => {
-        const vidURL = parameters.srcURL;
-        const vidTitle = vidURL.substring(vidURL.lastIndexOf('/') + 1);
+		const vidURL = parameters.srcURL;
+		const vidTitle = vidURL.substring(vidURL.lastIndexOf('/') + 1);
 		const vidWin = new BrowserWindow({
 			title: vidTitle,
 			width: 1024,

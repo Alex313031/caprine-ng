@@ -750,7 +750,7 @@ ${debugInfo()}`;
 			click() {
 			const verWindow = new BrowserWindow({
 				width: 280,
-				height: 174,
+				height: 190,
 				useContentSize: true,
 				autoHideMenuBar: true,
 				maximizable: false,

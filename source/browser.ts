@@ -55,7 +55,6 @@ async function withSettingsMenu(callback: () => Promise<void> | void): Promise<v
 	await withMenu(settingsMenu as HTMLElement, callback);
 }
 
-
 async function selectMenuItem(itemNumber: number): Promise<void> {
 	let selector;
 

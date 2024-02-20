@@ -55,6 +55,7 @@ async function withSettingsMenu(callback: () => Promise<void> | void): Promise<v
 	await withMenu(settingsMenu as HTMLElement, callback);
 }
 
+
 async function selectMenuItem(itemNumber: number): Promise<void> {
 	let selector;
 
@@ -794,6 +795,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 	// Hook broken dark mode observer
 	observeThemeBugs();
+
+	// fix hidden image preview
+	const observer = new MutationObserver(() => {
+		const target = document.documentElement;
+		if (target.classList.contains('hide-preferences-window')) {
+			target.classList.remove('hide-preferences-window');
+		}
+	});
+	observer.observe(document.documentElement, {attributes: true, childList: true, subtree: true});
 });
 
 // Handle title bar double-click.

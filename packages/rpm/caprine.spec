@@ -2,18 +2,18 @@
 %global _build_id_links alldebug
 
 Name:           caprine
-Version:        2.59.2
+Version:        2.59.3
 Release:        1%{?dist}
 Summary:        Elegant Facebook Messenger desktop app
 
 License:        MIT
 URL:            https://sindresorhus.com/caprine/
-Source0:        https://github.com/sindresorhus/caprine/archive/refs/tags/v%{version}.tar.gz
+Source0:        https://github.com/Alex313031/caprine-ng/archive/refs/tags/v%{version}.tar.gz
 Source1:        %{name}.desktop
 
 BuildArch:      x86_64
 BuildRequires:  npm
-BuildRequires:  nodejs >= 18.0.0
+BuildRequires:  nodejs >= 16.0.0
 
 %description
 Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.
@@ -57,22 +57,25 @@ install -Dm644 license %{buildroot}%{_datadir}/licenses/%{name}
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
-* Mon Feb 19 2024 dusansimic <dusan.simic1810@gmail.com> - 2.59.2-1
-- Hidden dialog issue Fix
-- Update Messenger for Mac/Windows selectors
-* Wed Oct 11 2023 dusansimic <dusan.simic1810@gmail.com> - 2.59.1-1
+* Tue Feb 20 2024 Alex313031 <alex313031@gmail.com> - 2.59.3-1
+- Release 2.59.3
+* Mon Jan 15 2024 Alex313031 <alex313031@gmail.com> - 2.59.2-1
+- Release 2.59.2
+* Mon Oct 09 2023 Alex313031 <alex313031@gmail.com> - 2.59.1-1
 - Release 2.59.1
 * Wed Sep 27 2023 dusansimic <dusan.simic1810@gmail.com> - 2.59.0-1
 - Release 2.59.0
 * Mon Sep 25 2023 dusansimic <dusan.simic1810@gmail.com> - 2.58.3-1
 - Release 2.58.3
-* Mon Sep 25 2023 dusansimic <dusan.simic1810@gmail.com> - 2.58.2-1
+* Fri Aug 22 2023 Alex313031 <alex313031@gmail.com> - 2.58.2-1
 - Release 2.58.2
-* Tue Sep  5 2023 dusansimic <dusan.simic1810@gmail.com> - 2.58.1-1
+* Fri Aug 11 2023 Alex313031 <alex313031@gmail.com> - 2.58.1-1
 - Release 2.58.1
-* Wed Jul 26 2023 dusansimic <dusan.simic1810@gmail.com> - 2.58.0-1
-- Release 2.58.0
-* Sat May  6 2023 dusansimic <dusan.simic1810@gmail.com> - 2.57.4-1
+* Fri Jul 20 2023 Alex313031 <alex313031@gmail.com> - 2.57.6-1
+- Release 2.57.6
+* Fri Jun 6 2023 Alex313031 <alex313031@gmail.com> - 2.57.5-1
+- Release 2.57.5
+* Sat May 6 2023 dusansimic <dusan.simic1810@gmail.com> - 2.57.4-1
 - Release 2.57.4
 * Sun Apr 30 2023 dusansimic <dusan.simic1810@gmail.com> - 2.57.3-1
 - Release 2.57.3

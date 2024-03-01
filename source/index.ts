@@ -29,7 +29,7 @@ import {sendAction, sendBackgroundAction, messengerDomain, stripTrackingFromUrl}
 import {process as processEmojiUrl} from './emoji';
 import ensureOnline from './ensure-online';
 import {setUpMenuBarMode} from './menu-bar-mode';
-import {caprineIconPath} from './constants';
+import {caprineIconPath, caprineWinIconPath} from './constants';
 
 ipc.setMaxListeners(100);
 
@@ -40,18 +40,113 @@ electronDebug({
 
 electronDl();
 electronContextMenu({
+	showSelectAll: true,
+	showCopyImage: true,
 	showCopyImageAddress: true,
-	prepend(defaultActions) {
-		/*
-		TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)
-		See explanation for this hacky solution here: https://github.com/sindresorhus/caprine/pull/1169
-		*/
-		defaultActions.copyLink({
-			transform: stripTrackingFromUrl,
+	showSaveImageAs: true,
+	showCopyVideoAddress: true,
+	showSaveVideoAs: true,
+	showCopyLink: true,
+	showSaveLinkAs: true,
+	showInspectElement: true,
+	showLookUpSelection: true,
+	showSearchWithGoogle: false,
+	prepend: (defaultActions, parameters) => [
+	/*
+	TODO: Use menu option or use replacement of options (https://github.com/sindresorhus/electron-context-menu/issues/70)
+	See explanation for this hacky solution here: https://github.com/sindresorhus/caprine/pull/1169
+	*/
+	defaultActions.copyLink({
+		transform: stripTrackingFromUrl,
+	}),
+	{
+		label: 'Open Link in New Window',
+		// Only show it when right-clicking a link
+		visible: parameters.linkURL.trim().length > 0,
+		click: () => {
+		const toURL = parameters.linkURL;
+		const linkWin = new BrowserWindow({
+			title: 'New Window',
+			width: 1024,
+			height: 768,
+			useContentSize: true,
+			darkTheme: darkMode.isEnabled,
+			webPreferences: {
+				nodeIntegration: false,
+				nodeIntegrationInWorker: false,
+				experimentalFeatures: true,
+				devTools: true,
+			},
 		});
-
-		return [];
+		linkWin.loadURL(toURL);
+		},
 	},
+	{
+		label: 'Search with Google',
+		// Only show it when right-clicking text
+		visible: parameters.selectionText.trim().length > 0,
+		click: () => {
+		const searchURL = `https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`;
+		const searchWin = new BrowserWindow({
+			width: 1024,
+			height: 700,
+			useContentSize: true,
+			darkTheme: darkMode.isEnabled,
+			webPreferences: {
+				nodeIntegration: false,
+				nodeIntegrationInWorker: false,
+				experimentalFeatures: true,
+				devTools: true,
+			},
+		});
+		searchWin.loadURL(searchURL);
+		},
+	},
+	{
+		label: 'Open Image in New Window',
+		// Only show it when right-clicking an image
+		visible: parameters.mediaType === 'image',
+		click: () => {
+		const imgURL = parameters.srcURL;
+		const imgTitle = imgURL.substring(imgURL.lastIndexOf('/') + 1);
+		const imgWin = new BrowserWindow({
+			title: imgTitle,
+			useContentSize: true,
+			darkTheme: darkMode.isEnabled,
+			webPreferences: {
+				nodeIntegration: false,
+				nodeIntegrationInWorker: false,
+				experimentalFeatures: true,
+				devTools: true,
+			},
+		});
+		imgWin.loadURL(imgURL);
+		},
+	},
+	{
+		label: 'Open Video in New Window',
+		// Only show it when right-clicking video
+		visible: parameters.mediaType === 'video',
+		click: () => {
+		const vidURL = parameters.srcURL;
+		const vidTitle = vidURL.substring(vidURL.lastIndexOf('/') + 1);
+		const vidWin = new BrowserWindow({
+			title: vidTitle,
+			width: 1024,
+			height: 768,
+			useContentSize: true,
+			darkTheme: darkMode.isEnabled,
+			webPreferences: {
+				nodeIntegration: false,
+				nodeIntegrationInWorker: false,
+				experimentalFeatures: true,
+				devTools: true,
+			},
+		});
+		vidWin.loadURL(vidURL);
+		},
+	},
+	],
 });
 
 app.setAppUserModelId('com.sindresorhus.caprine');
@@ -59,6 +154,14 @@ app.setAppUserModelId('com.sindresorhus.caprine');
 if (!config.get('hardwareAcceleration')) {
 	app.disableHardwareAcceleration();
 }
+
+if (config.get('hardwareAcceleration')) {
+	app.commandLine.appendSwitch('ignore-gpu-blocklist');
+	app.commandLine.appendSwitch('enable-gpu-rasterization');
+	app.commandLine.appendSwitch('enable-features', 'CanvasOopRasterization');
+}
+
+app.commandLine.appendSwitch('enable-quic');
 
 if (!is.development && config.get('autoUpdate')) {
 	(async () => {
@@ -268,7 +371,7 @@ function createMainWindow(): BrowserWindow {
 		y: lastWindowState.y,
 		width: lastWindowState.width,
 		height: lastWindowState.height,
-		icon: is.linux ? caprineIconPath : undefined,
+		icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
 		minWidth: 400,
 		minHeight: 200,
 		alwaysOnTop: config.get('alwaysOnTop'),
@@ -282,6 +385,9 @@ function createMainWindow(): BrowserWindow {
 			preload: path.join(__dirname, 'browser.js'),
 			contextIsolation: true,
 			nodeIntegration: true,
+			experimentalFeatures: true,
+			webviewTag: true,
+			devTools: true,
 			spellcheck: config.get('isSpellCheckerEnabled'),
 			plugins: true,
 		},
@@ -334,6 +440,16 @@ function createMainWindow(): BrowserWindow {
 			} else {
 				win.hide();
 			}
+		}
+	});
+
+	win.on('app-command', (_event, command) => {
+		console.log('app-command: ' + command);
+		if (command === 'close') {
+			tray.destroy();
+			app.quit();
+		} else if (command === 'browser-refresh') {
+			win.reload();
 		}
 	});
 
@@ -505,6 +621,9 @@ function createMainWindow(): BrowserWindow {
 						titleBarStyle: 'default',
 						webPreferences: {
 							nodeIntegration: false,
+							experimentalFeatures: true,
+							webviewTag: true,
+							devTools: true,
 							preload: path.join(__dirname, 'browser-call.js'),
 						},
 					}};
@@ -539,8 +658,8 @@ function createMainWindow(): BrowserWindow {
 			}
 
 			if (
-				// Example: https://company-name.facebook.com/login or
-				//   		https://company-name.workplace.com/login
+				//	Example: https://company-name.facebook.com/login or
+				//	https://company-name.workplace.com/login
 				(hostname.endsWith('.facebook.com') || hostname.endsWith('.workplace.com'))
 				&& (pathname.startsWith('/login') || pathname.startsWith('/chat'))
 			) {

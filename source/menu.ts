@@ -246,6 +246,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 					maximizable: false,
 					webPreferences: {
 						nodeIntegration: true,
+						experimentalFeatures: true,
 						preload: path.join(__dirname, 'proxy-preload.js'),
 					},
 				});
@@ -805,8 +806,6 @@ ${debugInfo()}`;
 						contextIsolation: false,
 						sandbox: false,
 						experimentalFeatures: true,
-						webviewTag: true,
-						devTools: true,
 						preload: path.join(__dirname, 'preload.js'),
 					},
 				});
@@ -889,13 +888,9 @@ ${debugInfo()}`;
 					webPreferences: {
 						nodeIntegration: false,
 						nodeIntegrationInWorker: false,
-						contextIsolation: false,
+						contextIsolation: true,
 						sandbox: true,
 						experimentalFeatures: true,
-						webviewTag: true,
-						devTools: true,
-						javascript: true,
-						plugins: true,
 					},
 				});
 				gpuWindow.loadURL('chrome://gpu');

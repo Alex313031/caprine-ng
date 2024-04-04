@@ -53,8 +53,7 @@ export default async function updateMenu(): Promise<Menu> {
 			visible: !config.get('useWorkChat'),
 			click() {
 				config.set('useWorkChat', true);
-				app.relaunch();
-				app.quit();
+				app.emit('relaunch-confirm');
 			},
 		},
 		{
@@ -63,8 +62,7 @@ export default async function updateMenu(): Promise<Menu> {
 			visible: config.get('useWorkChat'),
 			click() {
 				config.set('useWorkChat', false);
-				app.relaunch();
-				app.quit();
+				app.emit('relaunch-confirm');
 			},
 		},
 		{
@@ -243,7 +241,9 @@ Press Command/Ctrl+R in Caprine to see your changes.
 					height: 300,
 					useContentSize: true,
 					autoHideMenuBar: true,
+					skipTaskbar: true,
 					maximizable: false,
+					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
 					webPreferences: {
 						nodeIntegration: true,
 						experimentalFeatures: true,
@@ -253,6 +253,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 				proxyWin.loadFile(path.join(__dirname, '..', 'static/proxy.html'));
 				proxyWin.on('closed', () => {
 					proxyWin = undefined;
+					app.emit('relaunch-confirm');
 				});
 			},
 		},
@@ -798,6 +799,7 @@ ${debugInfo()}`;
 					height: 190,
 					useContentSize: true,
 					autoHideMenuBar: true,
+					skipTaskbar: true,
 					maximizable: false,
 					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
 					webPreferences: {
@@ -844,8 +846,7 @@ ${debugInfo()}`;
 			label: 'Delete Settings',
 			click() {
 				config.clear();
-				app.relaunch();
-				app.quit();
+				app.emit('relaunch-confirm');
 			},
 		},
 		{
@@ -924,8 +925,7 @@ ${debugInfo()}`;
 			{
 				label: 'Relaunch Caprine',
 				click() {
-					app.relaunch();
-					app.quit();
+					app.emit('relaunch-confirm');
 				},
 			},
 		]),
@@ -997,8 +997,7 @@ ${debugInfo()}`;
 				{
 					label: 'Relaunch Caprine',
 					click() {
-						app.relaunch();
-						app.quit();
+						app.emit('relaunch-confirm');
 					},
 				},
 				{

@@ -737,21 +737,24 @@ app.on('activate', () => {
 app.on('relaunch-confirm', () => {
 	// Dialog box asking if user really wants to relaunch app
 	dialog.showMessageBox(mainWindow, {
-		'type': 'question',
-		'title': 'Relaunch Confirmation',
-		'message': 'Are you sure you want to relaunch Caprine?',
-		'buttons': [
+		type: 'question',
+		title: 'Relaunch Confirmation',
+		message: 'Are you sure you want to relaunch Caprine?',
+		buttons: [
 			'Yes',
-			'No'
-		]
+			'No',
+		],
 	})
-	.then((result) => {
-		if (result.response !== 0) { return; }
+	.then(result => {
+		if (result.response !== 0) {
+			return;
+		}
+
 		if (result.response === 0) {
 			app.relaunch();
 			app.quit();
 		}
-	})
+	});
 });
 
 app.on('before-quit', () => {

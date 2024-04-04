@@ -15,10 +15,10 @@ window.addEventListener('DOMContentLoaded', () => {
 		}
 	};
 
-	replaceText(`electron-version`, process.versions.electron);
-	replaceText(`chrome-version`, process.versions.chrome);
-	replaceText(`node-version`, process.versions.node);
-	replaceText(`v8-version`, process.versions.v8);
+	replaceText('electron-version', process.versions.electron);
+	replaceText('chrome-version', process.versions.chrome);
+	replaceText('node-version', process.versions.node);
+	replaceText('v8-version', process.versions.v8);
 });
 
 // Get app version from package.json

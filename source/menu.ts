@@ -6,7 +6,7 @@ import {
 	shell,
 	Menu,
 	MenuItemConstructorOptions,
-	dialog
+	dialog,
 } from 'electron';
 import {
 	is,

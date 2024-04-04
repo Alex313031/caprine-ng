@@ -1,14 +1,16 @@
 {
 	"name": "caprine",
+	"appName": "caprine",
 	"productName": "Caprine",
 	"version": "2.60.1",
-	"description": "Elegant Facebook Messenger desktop app",
+	"description": "Elegant Facebook Messenger desktop app - Legacy OS Builds",
 	"license": "MIT",
-	"repository": "sindresorhus/caprine",
+	"copyright": "Copyright © 2024 Alex313031",
+	"repository": "https://github.com/Alex313031/caprine-ng",
 	"author": {
-		"name": "Sindre Sorhus",
-		"email": "sindresorhus@gmail.com",
-		"url": "https://sindresorhus.com"
+		"name": "Alexander Frick",
+		"email": "alex313031@gmail.com",
+		"url": "https://thorium.rocks/win7"
 	},
 	"main": "dist-js",
 	"engines": {
@@ -16,17 +18,23 @@
 	},
 	"scripts": {
 		"postinstall": "patch-package && electron-builder install-app-deps",
-		"lint:xo": "xo",
-		"lint:stylelint": "stylelint \"css/**/*.css\"",
-		"lint": "npm run lint:xo && npm run lint:stylelint",
-		"test:tsc": "npm run build",
-		"test": "npm run test:tsc && npm run lint",
+		"lint": "tsc && xo && stylelint \"css/**/*.css\"",
+		"xo": "xo",
+		"style": "stylelint \"css/**/*.css\"",
+		"tsc": "tsc",
+		"test": "npm run lint",
+		"e": "electron .",
 		"start": "tsc && electron .",
-		"build": "tsc",
-		"dist:linux": "electron-builder --linux",
-		"dist:mac": "electron-builder --mac",
-		"dist:win": "electron-builder --win",
-		"release": "np --no-publish"
+		"dev": "tsc && electron --enable-logging=file --user-data-dir=./test .",
+		"build": "npm run lint && electron-builder --dir",
+		"buildMac": "npm run lint && electron-builder -m --x64 --dir && electron-builder -m --arm64 --dir",
+		"clean": "rimraf ./dist && rimraf ./dist-js && rimraf ./test && rimraf ./node_modules",
+		"distclean": "del-cli ./dist && del-cli ./dist-js",
+		"burn": "rimraf package-lock.json",
+		"distLinux": "npm run lint && electron-builder -l",
+		"distWin": "npm run lint && electron-builder -w --x64 && electron-builder -w --ia32",
+		"distMac": "electron-builder -m --x64 --pd dist/mac && electron-builder -m --arm64 --pd dist/mac-arm64",
+		"release": "tsc && np --no-publish"
 	},
 	"dependencies": {
 		"@electron/remote": "^2.1.2",
@@ -36,7 +44,7 @@
 		"electron-debug": "^3.2.0",
 		"electron-dl": "^3.5.2",
 		"electron-localshortcut": "^3.2.1",
-		"electron-store": "^8.1.0",
+		"electron-store": "^8.2.0",
 		"electron-updater": "^6.1.8",
 		"electron-util": "^0.17.2",
 		"element-ready": "^5.0.0",
@@ -53,15 +61,16 @@
 		"@types/facebook-locales": "^1.0.2",
 		"@types/lodash": "^4.14.202",
 		"del-cli": "^5.1.0",
-		"electron": "^29.0.1",
-		"electron-builder": "^24.12.0",
-		"husky": "^9.0.11",
-		"np": "^9.2.0",
+		"electron": "22.3.27",
+		"electron-builder": "23.6.0",
+		"husky": "8.0.3",
+		"np": "7.7.0",
 		"patch-package": "^8.0.0",
-		"stylelint": "^14.10.0",
+		"rimraf": "^3.0.2",
+		"stylelint": "^14.16.1",
 		"stylelint-config-xo": "^0.22.0",
 		"typescript": "^5.3.3",
-		"xo": "^0.57.0"
+		"xo": "0.56.0"
 	},
 	"xo": {
 		"envs": [
@@ -71,10 +80,15 @@
 		"rules": {
 			"@typescript-eslint/ban-ts-comment": "off",
 			"@typescript-eslint/consistent-type-imports": "off",
+			"@typescript-eslint/indent": "off",
 			"@typescript-eslint/naming-convention": "off",
 			"@typescript-eslint/no-floating-promises": "off",
 			"@typescript-eslint/no-loop-func": "off",
 			"@typescript-eslint/no-non-null-assertion": "off",
+			"unicorn/prefer-dom-node-text-content": "warn",
+			"unicorn/prefer-query-selector": "warn",
+			"unicorn/prefer-string-slice": "warn",
+			"unicorn/expiring-todo-comments": "off",
 			"@typescript-eslint/no-require-imports": "off",
 			"@typescript-eslint/no-unsafe-argument": "off",
 			"@typescript-eslint/no-unsafe-assignment": "off",
@@ -84,6 +98,10 @@
 			"import/extensions": "off",
 			"import/no-anonymous-default-export": "off",
 			"import/no-cycle": "off",
+			"n/prefer-global/process": "warn",
+			"object-shorthand": "warn",
+			"padding-line-between-statements": "warn",
+			"semi": "warn",
 			"n/file-extension-in-import": "off",
 			"unicorn/prefer-at": "off",
 			"unicorn/prefer-module": "off",
@@ -105,87 +123,6 @@
 	"np": {
 		"publish": false,
 		"releaseDraft": false
-	},
-	"build": {
-		"files": [
-			"**/*",
-			"!media${/*}"
-		],
-		"asarUnpack": [
-			"static/Icon.png"
-		],
-		"appId": "com.sindresorhus.caprine",
-		"mac": {
-			"category": "public.app-category.social-networking",
-			"icon": "build/icon.icns",
-			"electronUpdaterCompatibility": ">=4.5.2",
-			"darkModeSupport": true,
-			"target": {
-				"target": "default",
-				"arch": [
-					"x64",
-					"arm64"
-				]
-			},
-			"extendInfo": {
-				"LSUIElement": 1,
-				"NSCameraUsageDescription": "Caprine needs access to your camera.",
-				"NSMicrophoneUsageDescription": "Caprine needs access to your microphone."
-			}
-		},
-		"dmg": {
-			"iconSize": 160,
-			"contents": [
-				{
-					"x": 180,
-					"y": 170
-				},
-				{
-					"x": 480,
-					"y": 170,
-					"type": "link",
-					"path": "/Applications"
-				}
-			]
-		},
-		"linux": {
-			"target": [
-				"AppImage",
-				"deb",
-				"snap"
-			],
-			"icon": "build/icons/",
-			"synopsis": "Elegant Facebook Messenger desktop app",
-			"description": "Caprine is an unofficial and privacy focused Facebook Messenger app with many useful features.",
-			"category": "Network;Chat"
-		},
-		"snap": {
-			"plugs": [
-				"default",
-				"camera",
-				"removable-media"
-			],
-			"publish": [
-				{
-					"provider": "github"
-				},
-				{
-					"provider": "snapStore",
-					"channels": [
-						"stable"
-					]
-				}
-			]
-		},
-		"win": {
-			"verifyUpdateCodeSignature": false,
-			"icon": "build/icon.png"
-		},
-		"nsis": {
-			"oneClick": false,
-			"perMachine": false,
-			"allowToChangeInstallationDirectory": true
-		}
 	},
 	"husky": {
 		"hooks": {

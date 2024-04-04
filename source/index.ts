@@ -416,6 +416,10 @@ function createMainWindow(): BrowserWindow {
 		win.setSheetOffset(40);
 	}
 
+	if (config.get('useProxy')) {
+		session.defaultSession.setProxy({proxyRules: config.get('proxyAddress')});
+	}
+
 	win.loadURL(mainURL);
 
 	win.on('close', event => {
@@ -483,6 +487,10 @@ function createMainWindow(): BrowserWindow {
 
 (async () => {
 	await Promise.all([ensureOnline(), app.whenReady()]);
+	ipc.handle('config:get', (_, key) => config.get(key) as string);
+	ipc.on('config:set', (_, key, value) => {
+		config.set(key, value);
+	});
 	await updateAppMenu();
 	mainWindow = createMainWindow();
 

@@ -234,6 +234,27 @@ Press Command/Ctrl+R in Caprine to see your changes.
 				shell.openPath(filePath);
 			},
 		},
+		{
+			label: 'Proxy Settings',
+			click() {
+				let proxyWin: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					title: 'Proxy Settings',
+					width: 400,
+					height: 300,
+					useContentSize: true,
+					autoHideMenuBar: true,
+					maximizable: false,
+					webPreferences: {
+						nodeIntegration: true,
+						preload: path.join(__dirname, 'proxy-preload.js'),
+					},
+				});
+				proxyWin.loadFile(path.join(__dirname, '..', 'static/proxy.html'));
+				proxyWin.on('closed', () => {
+					proxyWin = undefined;
+				});
+			},
+		},
 	];
 
 	const preferencesSubmenu: MenuItemConstructorOptions[] = [
@@ -770,27 +791,30 @@ ${debugInfo()}`;
 		{
 			label: 'Show Versions',
 			click() {
-			const verWindow = new BrowserWindow({
-				width: 280,
-				height: 190,
-				useContentSize: true,
-				autoHideMenuBar: true,
-				maximizable: false,
-				title: 'Versions',
-				icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
-				webPreferences: {
-					nodeIntegration: false,
-					nodeIntegrationInWorker: false,
-					contextIsolation: false,
-					sandbox: false,
-					experimentalFeatures: true,
-					webviewTag: true,
-					devTools: true,
-					preload: path.join(__dirname, '..', 'static/preload.js'),
-				},
-			});
-			require('@electron/remote/main').enable(verWindow.webContents);
-			verWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
+				let verWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					title: 'Versions',
+					width: 280,
+					height: 190,
+					useContentSize: true,
+					autoHideMenuBar: true,
+					maximizable: false,
+					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						contextIsolation: false,
+						sandbox: false,
+						experimentalFeatures: true,
+						webviewTag: true,
+						devTools: true,
+						preload: path.join(__dirname, 'preload.js'),
+					},
+				});
+				require('@electron/remote/main').enable(verWindow.webContents);
+				verWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
+				verWindow.on('closed', () => {
+					verWindow = undefined;
+				});
 			},
 		},
 		aboutMenuItem({
@@ -858,22 +882,26 @@ ${debugInfo()}`;
 		{
 			label: 'Open chrome://gpu',
 			click() {
-			const gpuWindow = new BrowserWindow({
-				width: 1024,
-				height: 768,
-				webPreferences: {
-					nodeIntegration: false,
-					nodeIntegrationInWorker: false,
-					contextIsolation: false,
-					sandbox: true,
-					experimentalFeatures: true,
-					webviewTag: true,
-					devTools: true,
-					javascript: true,
-					plugins: true,
-				},
-			});
-			gpuWindow.loadURL('chrome://gpu');
+				let gpuWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					width: 1024,
+					height: 768,
+					useContentSize: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						contextIsolation: false,
+						sandbox: true,
+						experimentalFeatures: true,
+						webviewTag: true,
+						devTools: true,
+						javascript: true,
+						plugins: true,
+					},
+				});
+				gpuWindow.loadURL('chrome://gpu');
+				gpuWindow.on('closed', () => {
+					gpuWindow = undefined;
+				});
 			},
 		},
 	];

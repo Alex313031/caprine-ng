@@ -1,12 +1,12 @@
 import * as path from 'node:path';
 import {existsSync, writeFileSync} from 'node:fs';
 import {
-		app,
-		BrowserWindow,
-		shell,
-		Menu,
-		MenuItemConstructorOptions,
-		dialog
+	app,
+	BrowserWindow,
+	shell,
+	Menu,
+	MenuItemConstructorOptions,
+	dialog
 } from 'electron';
 import {
 	is,

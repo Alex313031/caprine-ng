@@ -632,7 +632,7 @@ function createMainWindow(): BrowserWindow {
 								nodeIntegration: false,
 								preload: path.join(__dirname, 'browser-call.js'),
 							},
-						}
+						},
 					};
 				}
 			} else {

@@ -67,7 +67,16 @@
     input[type="text"] {
       border: none;
       border-bottom: 1px solid var(--accentcolor);
+      border-radius: 3px;
       font-size: 14px;
+      background-color: #eee;
+    }
+    input[type="text"]:focus {
+      border-bottom: 1px solid transparent;
+      outline: 2px solid var(--accentcolor);
+    }
+    input, select, textarea {
+      color: #050505
     }
     input[type="radio"] {
       accent-color: var(--accentcolor);
@@ -93,6 +102,9 @@
           <label for="proxy-address" style="font-weight: bold; padding-right: 1em">Proxy Server:</label>
           <input type="text" id="proxy-address" placeholder="http://127.0.0.1:7890" style="width: 200px;">
         </div>
+        <small style="display: flex; align-items: center; padding-left: 2em; padding-top: 1em;">
+          <em>Note: Port number is optional</em>
+        </small>
     </div>
     <script>
         window.configApi.get('useProxy').then(res => {

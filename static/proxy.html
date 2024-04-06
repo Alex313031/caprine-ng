@@ -3,8 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
   <title>Proxy Settings</title>
   <style>
+    :root,
+    :root.light {
+      --bgcolor: #fff;
+      --fontcolor: #050505;
+      --linkcolor: #0000ee;
+      --visitedcolor: #551a8b;
+      --accentcolor: #0075ff;
+      --hrcolor: #0075ff;
+      --invert: #eee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bgcolor: #303030;
+        --fontcolor: #eee;
+        --linkcolor: #1be1be;
+        --visitedcolor: #ae5ee0;
+        --accentcolor: #0a7cff;
+        --hrcolor: #eee;
+        --invert: #000;
+      }
+    }
+    :root.dark {
+      --bgcolor: #303030;
+      --fontcolor: #eee;
+      --linkcolor: #1be1be;
+      --visitedcolor: #ae5ee0;
+      --accentcolor: #0a7cff;
+      --hrcolor: #eee;
+      --invert: #000;
+    }
     * {
       box-sizing: border-box;
     }
@@ -12,32 +43,40 @@
       font-family: "Roboto", sans-serif;
     }
     body {
+      max-width: 85%;
+      margin: auto;
+      color: var(--fontcolor);
+      background-color: var(--bgcolor);
       font-family: 'Roboto', sans-serif;
     }
     a:link {
-      color: #1be1be;
+      color: var(--linkcolor);
     }
     a:visited,a:active {
-      color: #ae5ee0;
+      color: var(--visitedcolor);
+    }
+    h3 {
+      text-align: center;
+      text-shadow: 1px 1px 1px var(--invert);
     }
     hr {
       border: 0;
       height: 1px;
-      background: #0075FF;
+      background: var(--hrcolor);
     }
     input[type="text"] {
       border: none;
-      border-bottom: 1px solid #0075FF;
+      border-bottom: 1px solid var(--accentcolor);
       font-size: 14px;
     }
     input[type="radio"] {
-      accent-color: #0075FF;
+      accent-color: var(--accentcolor);
     }
   </style>
 </head>
 <body>
     <div>
-      <h3 style="text-align: center;"><u>Proxy Configuration</u></h3>
+      <h3><u>Proxy Configuration</u></h3>
         <div style="display: flex; flex-direction: column; padding-left: 1em; padding-bottom: 1em;">
           <div style="display: flex; align-items: center; justify-content: space-between;">
             <div>

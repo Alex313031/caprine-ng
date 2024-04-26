@@ -44,6 +44,8 @@ export type StoreType = {
 	autoplayVideos: boolean;
 	isSpellCheckerEnabled: boolean;
 	spellCheckerLanguages: string[];
+	useProxy: boolean;
+	proxyAddress: string;
 };
 
 const schema: Store.Schema<StoreType> = {
@@ -100,7 +102,7 @@ const schema: Store.Schema<StoreType> = {
 	},
 	menuBarMode: {
 		type: 'boolean',
-		default: false,
+		default: true,
 	},
 	showDockIcon: {
 		type: 'boolean',
@@ -181,7 +183,7 @@ const schema: Store.Schema<StoreType> = {
 	},
 	autoUpdate: {
 		type: 'boolean',
-		default: true,
+		default: false,
 	},
 	notificationsMuted: {
 		type: 'boolean',
@@ -197,7 +199,7 @@ const schema: Store.Schema<StoreType> = {
 	},
 	quitOnWindowClose: {
 		type: 'boolean',
-		default: false,
+		default: true,
 	},
 	keepMeSignedIn: {
 		type: 'boolean',
@@ -217,6 +219,14 @@ const schema: Store.Schema<StoreType> = {
 			type: 'string',
 		},
 		default: [],
+	},
+	useProxy: {
+		type: 'boolean',
+		default: false,
+	},
+	proxyAddress: {
+		type: 'string',
+		default: '',
 	},
 };
 

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Versions</title>
+  <style>
+    :root,
+    :root.light {
+      --bgcolor: #fff;
+      --fontcolor: #050505;
+      --linkcolor: #0000ee;
+      --visitedcolor: #551a8b;
+      --invert: #eee;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bgcolor: #303030;
+        --fontcolor: #eee;
+        --linkcolor: #1be1be;
+        --visitedcolor: #ae5ee0;
+        --invert: #000;
+      }
+    }
+    :root.dark {
+      --bgcolor: #303030;
+      --fontcolor: #eee;
+      --linkcolor: #1be1be;
+      --visitedcolor: #ae5ee0;
+      --invert: #000;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    html {
+      font-family: "Roboto", sans-serif;
+    }
+    body {
+      max-width: 85%;
+      margin: auto;
+      padding: 4px;
+      color: var(--fontcolor);
+      background-color: var(--bgcolor);
+      font-family: 'Roboto', sans-serif;
+    }
+    p.versions {
+      text-shadow: 1px 1px 1px var(--invert);
+    }
+    a:link {
+      color: var(--linkcolor);
+    }
+    a:visited,a:active {
+      color: var(--visitedcolor);
+    }
+  </style>
+</head>
+<body>
+    <p class="versions">
+      <u>Caprine</u>:&nbsp;v<span class="ver" id="caprine-version"></span>
+	    <br>
+      <a href="https://www.electronjs.org/" target="_blank" rel="noopener">Electron</a>:&nbsp;<span class="ver" id="electron-version"></span>
+        <br>
+      <a href="https://www.chromium.org/" target="_blank" rel="noopener">Chromium</a>:&nbsp;<span class="ver" id="chrome-version"></span>
+        <br>
+      <a href="https://nodejs.org/" target="_blank" rel="noopener">Node.js</a>:&nbsp;<span class="ver" id="node-version"></span>
+        <br>
+      <a href="https://v8.dev/" target="_blank" rel="noopener">V8</a>:&nbsp;<span class="ver" id="v8-version"></span>
+        <br>
+      <span title="OS Type"><u>OS Type</u>:&nbsp;<span class="ver" id="os-type"></span>&nbsp;<span class="ver" id="arch-type"></span></span>
+    </p>
+    <p>
+      <small>Copyright © 2024 by <a href="https://github.com/Alex313031" target="_blank" rel="noopener">Alex313031</a></small>
+    </p>
+</body>
+</html>

@@ -1,0 +1,3 @@
+## For codesigning on MacOS
+
+codesign --sign - --force --deep dist/mac/Caprine.app && codesign --sign - --force --deep dist/mac-arm64/Caprine.app

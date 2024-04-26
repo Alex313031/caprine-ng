@@ -900,6 +900,27 @@ ${debugInfo()}`;
 				});
 			},
 		},
+		{
+			label: 'Open chrome://process-internals',
+			click() {
+				let procWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					width: 1024,
+					height: 768,
+					useContentSize: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						contextIsolation: true,
+						sandbox: true,
+						experimentalFeatures: true,
+					},
+				});
+				procWindow.loadURL('chrome://process-internals');
+				procWindow.on('closed', () => {
+					procWindow = undefined;
+				});
+			},
+		},
 	];
 
 	const macosTemplate: MenuItemConstructorOptions[] = [

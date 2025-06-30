@@ -2,6 +2,7 @@ import * as path from 'node:path';
 import {existsSync, writeFileSync} from 'node:fs';
 import {
 	app,
+	BrowserWindow,
 	shell,
 	Menu,
 	MenuItemConstructorOptions,
@@ -26,7 +27,7 @@ import {
 } from './util';
 import {generateSubmenu as generateEmojiSubmenu} from './emoji';
 import {toggleMenuBarMode} from './menu-bar-mode';
-import {caprineIconPath} from './constants';
+import {caprineIconPath, caprineIcon64Path, caprineWinIconPath} from './constants';
 
 export default async function updateMenu(): Promise<Menu> {
 	const newConversationItem: MenuItemConstructorOptions = {
@@ -52,8 +53,7 @@ export default async function updateMenu(): Promise<Menu> {
 			visible: !config.get('useWorkChat'),
 			click() {
 				config.set('useWorkChat', true);
-				app.relaunch();
-				app.quit();
+				app.emit('relaunch-confirm');
 			},
 		},
 		{
@@ -62,8 +62,7 @@ export default async function updateMenu(): Promise<Menu> {
 			visible: config.get('useWorkChat'),
 			click() {
 				config.set('useWorkChat', false);
-				app.relaunch();
-				app.quit();
+				app.emit('relaunch-confirm');
 			},
 		},
 		{
@@ -233,6 +232,31 @@ Press Command/Ctrl+R in Caprine to see your changes.
 				shell.openPath(filePath);
 			},
 		},
+		{
+			label: 'Proxy Settings',
+			click() {
+				let proxyWin: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					title: 'Proxy Settings',
+					width: 400,
+					height: 300,
+					useContentSize: true,
+					autoHideMenuBar: true,
+					skipTaskbar: true,
+					maximizable: false,
+					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
+					webPreferences: {
+						nodeIntegration: true,
+						experimentalFeatures: true,
+						preload: path.join(__dirname, 'proxy-preload.js'),
+					},
+				});
+				proxyWin.loadFile(path.join(__dirname, '..', 'static/proxy.html'));
+				proxyWin.on('closed', () => {
+					proxyWin = undefined;
+					app.emit('relaunch-confirm');
+				});
+			},
+		},
 	];
 
 	const preferencesSubmenu: MenuItemConstructorOptions[] = [
@@ -240,7 +264,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix privacy features */
 			/* If you want to help, see #1688 */
 			label: 'Privacy',
-			visible: is.development,
+			visible: true,
 			submenu: privacySubmenu,
 		},
 		{
@@ -262,7 +286,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			label: 'Autoplay Videos',
 			id: 'video-autoplay',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('autoplayVideos'),
 			click() {
 				config.set('autoplayVideos', !config.get('autoplayVideos'));
@@ -273,7 +297,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix notifications */
 			label: 'Show Message Preview in Notifications',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('notificationMessagePreview'),
 			click(menuItem) {
 				config.set('notificationMessagePreview', menuItem.checked);
@@ -284,7 +308,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			label: 'Mute Notifications',
 			id: 'mute-notifications',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('notificationsMuted'),
 			click() {
 				sendAction('toggle-mute-notifications');
@@ -302,7 +326,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix notification badge */
 			label: 'Show Unread Badge',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('showUnreadBadge'),
 			click() {
 				config.set('showUnreadBadge', !config.get('showUnreadBadge'));
@@ -416,7 +440,7 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			/* TODO: Fix notifications */
 			label: 'Flash Window on Message',
 			type: 'checkbox',
-			visible: is.development,
+			visible: true,
 			checked: config.get('flashWindowOnMessage'),
 			click(menuItem) {
 				config.set('flashWindowOnMessage', menuItem.checked);
@@ -459,6 +483,46 @@ Press Command/Ctrl+R in Caprine to see your changes.
 	];
 
 	const viewSubmenu: MenuItemConstructorOptions[] = [
+		{
+			label: 'Go Back',
+			accelerator: 'Alt+Left',
+			click() {
+				getWindow().webContents.goBack();
+			},
+		},
+		{
+			label: 'Go Forward',
+			accelerator: 'Alt+Right',
+			click() {
+				getWindow().webContents.goForward();
+			},
+		},
+		{
+			label: 'Close Window',
+			accelerator: 'CmdOrCtrl+W',
+			click(focusedWindow) {
+				if (focusedWindow) {
+					getWindow().close();
+				}
+			},
+		},
+		{
+			label: 'Reload',
+			accelerator: 'CmdOrCtrl+R',
+			click() {
+				getWindow().webContents.reload();
+			},
+		},
+		{
+			label: 'Force Reload',
+			accelerator: 'CmdOrCtrl+Shift+R',
+			click() {
+				getWindow().webContents.reloadIgnoringCache();
+			},
+		},
+		{
+			type: 'separator',
+		},
 		{
 			label: 'Reset Text Size',
 			accelerator: 'CommandOrControl+0',
@@ -674,15 +738,15 @@ Press Command/Ctrl+R in Caprine to see your changes.
 	const helpSubmenu: MenuItemConstructorOptions[] = [
 		openUrlMenuItem({
 			label: 'Website',
-			url: 'https://github.com/sindresorhus/caprine',
+			url: 'https://github.com/Alex313031/caprine-ng#readme',
 		}),
 		openUrlMenuItem({
 			label: 'Source Code',
-			url: 'https://github.com/sindresorhus/caprine',
+			url: 'https://github.com/Alex313031/caprine-ng',
 		}),
 		openUrlMenuItem({
 			label: 'Donate…',
-			url: 'https://github.com/sindresorhus/caprine?sponsor=1',
+			url: 'https://github.com/Alex313031/caprine-ng?sponsor=1',
 		}),
 		{
 			label: 'Report an Issue…',
@@ -696,27 +760,53 @@ Press Command/Ctrl+R in Caprine to see your changes.
 ${debugInfo()}`;
 
 				openNewGitHubIssue({
-					user: 'sindresorhus',
-					repo: 'caprine',
+					user: 'Alex313031',
+					repo: 'caprine-ng',
 					body,
 				});
 			},
 		},
 	];
 
-	if (!is.macos) {
-		helpSubmenu.push(
-			{
-				type: 'separator',
+	helpSubmenu.push(
+		{
+			type: 'separator',
+		},
+		{
+			label: 'Show Versions',
+			click() {
+				let verWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					title: 'Versions',
+					width: 280,
+					height: 190,
+					useContentSize: true,
+					autoHideMenuBar: true,
+					skipTaskbar: true,
+					maximizable: false,
+					icon: is.linux || is.macos ? caprineIconPath : caprineWinIconPath,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						contextIsolation: false,
+						sandbox: false,
+						experimentalFeatures: true,
+						preload: path.join(__dirname, 'preload.js'),
+					},
+				});
+				require('@electron/remote/main').enable(verWindow.webContents);
+				verWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
+				verWindow.on('closed', () => {
+					verWindow = undefined;
+				});
 			},
-			aboutMenuItem({
-				icon: caprineIconPath,
-				copyright: 'Created by Sindre Sorhus',
-				text: 'Maintainers:\nDušan Simić\nLefteris Garyfalakis\nMichael Quevillon\nNikolas Spiridakis',
-				website: 'https://github.com/sindresorhus/caprine',
-			}),
-		);
-	}
+		},
+		aboutMenuItem({
+			icon: is.linux || is.macos ? caprineIcon64Path : caprineWinIconPath,
+			copyright: 'Created by Sindre Sorhus',
+			text: 'Maintainers:\nAlex313031\nDušan Simić\nLefteris Garyfalakis\nMichael Quevillon\nNikolas Spiridakis',
+			website: 'https://github.com/Alex313031/caprine-ng#readme',
+		}),
+	);
 
 	const debugSubmenu: MenuItemConstructorOptions[] = [
 		{
@@ -738,16 +828,79 @@ ${debugInfo()}`;
 			label: 'Delete Settings',
 			click() {
 				config.clear();
-				app.relaunch();
-				app.quit();
+				app.emit('relaunch-confirm');
 			},
 		},
 		{
 			label: 'Delete App Data',
 			click() {
-				shell.trashItem(app.getPath('userData'));
+				// Emit this first, otherwise we get a crash in the main process.
 				app.relaunch();
+				shell.trashItem(app.getPath('userData'));
 				app.quit();
+			},
+		},
+		{
+			type: 'separator',
+		},
+		{
+			label: 'Toggle Developer Tools',
+			accelerator: is.macos ? 'Alt+Command+I' : 'Ctrl+Shift+I',
+			click() {
+				getWindow().webContents.toggleDevTools();
+			},
+		},
+		{
+			label: 'Open Electron DevTools',
+			accelerator: is.macos ? 'CmdorCtrl+Shift+F12' : 'F12',
+			click() {
+				// @ts-expect-error
+				BrowserWindow.getFocusedWindow().openDevTools({mode: 'detach'});
+			},
+		},
+		{
+			type: 'separator',
+		},
+		{
+			label: 'Open chrome://gpu',
+			click() {
+				let gpuWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					width: 1024,
+					height: 768,
+					useContentSize: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						contextIsolation: true,
+						sandbox: true,
+						experimentalFeatures: true,
+					},
+				});
+				gpuWindow.loadURL('chrome://gpu');
+				gpuWindow.on('closed', () => {
+					gpuWindow = undefined;
+				});
+			},
+		},
+		{
+			label: 'Open chrome://process-internals',
+			click() {
+				let procWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+					width: 1024,
+					height: 768,
+					useContentSize: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						contextIsolation: true,
+						sandbox: true,
+						experimentalFeatures: true,
+					},
+				});
+				procWindow.loadURL('chrome://process-internals');
+				procWindow.on('closed', () => {
+					procWindow = undefined;
+				});
 			},
 		},
 	];
@@ -775,8 +928,7 @@ ${debugInfo()}`;
 			{
 				label: 'Relaunch Caprine',
 				click() {
-					app.relaunch();
-					app.quit();
+					app.emit('relaunch-confirm');
 				},
 			},
 		]),
@@ -808,6 +960,10 @@ ${debugInfo()}`;
 			role: 'windowMenu',
 		},
 		{
+			label: 'Debug',
+			submenu: debugSubmenu,
+		},
+		{
 			role: 'help',
 			submenu: helpSubmenu,
 		},
@@ -816,6 +972,7 @@ ${debugInfo()}`;
 	const linuxWindowsTemplate: MenuItemConstructorOptions[] = [
 		{
 			role: 'fileMenu',
+			label: 'Caprine',
 			submenu: [
 				newConversationItem,
 				newRoomItem,
@@ -843,17 +1000,30 @@ ${debugInfo()}`;
 				{
 					label: 'Relaunch Caprine',
 					click() {
-						app.relaunch();
-						app.quit();
+						app.emit('relaunch-confirm');
 					},
 				},
 				{
 					role: 'quit',
+					accelerator: 'CmdOrCtrl+Q',
+					label: 'Quit Caprine',
 				},
 			],
 		},
 		{
 			role: 'editMenu',
+			submenu: [
+			{role: 'undo'},
+			{role: 'redo'},
+			{type: 'separator'},
+			{role: 'cut'},
+			{role: 'copy'},
+			{role: 'paste'},
+			{role: 'pasteAndMatchStyle'},
+			{role: 'delete'},
+			{type: 'separator'},
+			{role: 'selectAll'},
+			],
 		},
 		{
 			role: 'viewMenu',
@@ -864,19 +1034,16 @@ ${debugInfo()}`;
 			submenu: conversationSubmenu,
 		},
 		{
+			label: 'Debug',
+			submenu: debugSubmenu,
+		},
+		{
 			role: 'help',
 			submenu: helpSubmenu,
 		},
 	];
 
 	const template = is.macos ? macosTemplate : linuxWindowsTemplate;
-
-	if (is.development) {
-		template.push({
-			label: 'Debug',
-			submenu: debugSubmenu,
-		});
-	}
 
 	const menu = Menu.buildFromTemplate(template);
 	Menu.setApplicationMenu(menu);

@@ -1,0 +1,106 @@
+{
+  "electronVersion": "22.3.27",
+  "files": [
+    "**/*",
+    "!media${/*}"
+  ],
+  "asarUnpack": [
+    "static/Icon.png",
+    "static/Icon64.png",
+    "static/icon.ico"
+  ],
+  "appId": "com.alex313031.caprine",
+  "copyright": "Copyright © 2024 Alex313031",
+  "mac": {
+    "category": "public.app-category.social-networking",
+    "icon": "build/icon.icns",
+    "electronUpdaterCompatibility": ">=4.5.2",
+    "darkModeSupport": true,
+    "artifactName": "Caprine_${version}_macos_${arch}.${ext}",
+    "target": [
+      "dmg",
+      "zip"
+    ],
+    "extendInfo": {
+      "LSUIElement": 1,
+      "NSCameraUsageDescription": "Caprine needs access to your camera.",
+      "NSMicrophoneUsageDescription": "Caprine needs access to your microphone."
+    }
+  },
+  "dmg": {
+    "iconSize": 160,
+    "contents": [
+      {
+      "x": 180,
+      "y": 170
+      },
+      {
+      "x": 480,
+      "y": 170,
+      "type": "link",
+      "path": "/Applications"
+      }
+    ]
+  },
+  "linux": {
+    "target": [
+      "AppImage",
+      "deb",
+      "rpm",
+      "zip"
+    ],
+    "icon": "build/icons",
+    "maintainer": "Alex313031",
+    "vendor": "Alex313031",
+    "synopsis": "Elegant Facebook Messenger desktop app",
+    "description": "Caprine is an unofficial and privacy focused Facebook Messenger app with many useful features.",
+    "category": "Network;Chat",
+    "artifactName": "caprine_${version}_${arch}.${ext}",
+    "desktop": {
+      "Name": "Caprine",
+      "StartupWMClass": "caprine",
+      "Keywords": "facebook;messenger;chat;",
+      "Icon": "caprine"
+    }
+  },
+  "snap": {
+    "plugs": [
+      "default",
+      "camera",
+      "removable-media"
+    ],
+    "publish": [
+      {
+      "provider": "github"
+      },
+      {
+      "provider": "snapStore",
+        "channels": [
+          "stable"
+        ]
+      }
+    ]
+  },
+  "win": {
+    "target": [
+      "zip",
+      "portable",
+      "nsis"
+    ],
+    "verifyUpdateCodeSignature": false,
+    "icon": "build/icon.ico",
+    "artifactName": "Caprine_${version}_${arch}.${ext}"
+  },
+  "nsis": {
+    "shortcutName": "Caprine",
+    "artifactName": "Caprine_Setup_${version}_${arch}.${ext}",
+    "deleteAppDataOnUninstall": true,
+    "uninstallDisplayName": "Caprine ${version}",
+    "oneClick": false,
+    "perMachine": false,
+    "allowToChangeInstallationDirectory": true
+  },
+  "portable": {
+    "artifactName": "Caprine_portable_${version}_${arch}.${ext}"
+  },
+}

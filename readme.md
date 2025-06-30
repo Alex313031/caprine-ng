@@ -1,7 +1,7 @@
 <div align="center">
 	<br>
 	<br>
-	<a href="https://github.com/sindresorhus/caprine">
+	<a href="https://github.com/Alex313031/caprine-ng#readme">
 		<img src="media/AppIcon-readme.png" width="200" height="200">
 	</a>
 	<h1>Caprine</h1>
@@ -17,7 +17,7 @@
 		Caprine is feature complete. However, we welcome contributions for improvements and bug fixes.
 	</b>
 	<br>
-		<a href="https://github.com/sindresorhus/caprine">
+		<a href="https://github.com/Alex313031/caprine-ng">
 		Website
 		</a>
 	<br>
@@ -47,9 +47,9 @@
 
 ## Install
 
-*macOS 10.12+ (Intel and Apple Silicon), Linux (x64 and arm64), and Windows 10+ (64-bit) are supported.*
+*macOS 10.12+ (Intel and Apple Silicon), Linux (x64 and arm64), and Windows 7+ (64-bit and arm64) are supported.*
 
-Download the latest version on the [website](https://github.com/sindresorhus/caprine) or below.
+Download the latest version on the [website](https://github.com/Alex313031/caprine-ng/releases/latest) or below.
 
 ### macOS
 

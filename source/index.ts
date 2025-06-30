@@ -1,3 +1,4 @@
+import * as Os from 'node:os';
 import path from 'node:path';
 import {readFileSync, existsSync} from 'node:fs';
 import {
@@ -421,7 +422,8 @@ function createMainWindow(): BrowserWindow {
 		session.defaultSession.setProxy({proxyRules: config.get('proxyAddress')});
 	}
 
-	win.loadURL(mainURL);
+	const NewUserAgent = getNewUserAgent();
+	win.loadURL(mainURL, {userAgent: NewUserAgent});
 
 	win.on('close', event => {
 		if (config.get('quitOnWindowClose')) {
@@ -731,6 +733,60 @@ app.on('activate', () => {
 	if (mainWindow) {
 		mainWindow.show();
 	}
+});
+
+function getNewUserAgent() {
+	// Make them think we are on newer Chromium than M108 (◔_◔)
+	const archType = Os.arch();
+	let NewUserAgent;
+	if (is.windows) {
+		// eslint-disable-next-line unicorn/prefer-switch
+		if (archType === 'x64') {
+			NewUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		} else if (archType === 'ia32') {
+			NewUserAgent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		} else if (archType === 'arm64') {
+			NewUserAgent = 'Mozilla/5.0 (Windows NT 10.0; ARM64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		}
+	} else if (is.linux) {
+		if (archType === 'x64') {
+			NewUserAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		} else if (archType === 'arm64') {
+			NewUserAgent = 'Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		}
+	} else if (is.macos) {
+		NewUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+	} else {
+		NewUserAgent = 'Mozilla/5.0 (X11; CrOS x86_64 10066.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+	}
+
+	return NewUserAgent;
+}
+
+async function createPopOutWindow() {
+	const popoutWindow = new BrowserWindow({
+		width: 1024,
+		height: 768,
+		title: undefined,
+		useContentSize: true,
+		webPreferences: {
+			nodeIntegration: false,
+			nodeIntegrationInWorker: false,
+			contextIsolation: false,
+			sandbox: true,
+			experimentalFeatures: true,
+			webviewTag: true,
+			devTools: true,
+		},
+	});
+
+	const NewUserAgent = getNewUserAgent();
+	popoutWindow.loadURL('https://www.google.com/', {userAgent: NewUserAgent});
+}
+
+// @ts-expect-error
+app.on('popout-window', () => {
+	createPopOutWindow();
 });
 
 // @ts-expect-error

@@ -862,6 +862,12 @@ ${debugInfo()}`;
 			type: 'separator',
 		},
 		{
+			label: 'Open Google Popout Window',
+			click() {
+				app.emit('popout-window');
+			},
+		},
+		{
 			label: 'Open chrome://gpu',
 			click() {
 				let gpuWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({

@@ -235,11 +235,15 @@ function countUnread(mutationsList: MutationRecord[]): void {
 		alreadyChecked.push(href);
 
 		// Get the image data URI from the parent of the author/text
-		const imgUrl = current.querySelector('img')?.dataset.caprineIcon;
+		const imgUrl = current.querySelector('img')?.dataset['caprineIcon'];
 		const textOptions = current.querySelectorAll(selectors.conversationSidebarTextSelector);
 		// Get the author and text of the new message
 		const titleTextNode = textOptions[0];
 		const bodyTextNode = textOptions[1];
+
+		if (!titleTextNode || !bodyTextNode) {
+			continue;
+		}
 
 		const titleText = generateStringFromNode(titleTextNode);
 		const bodyText = generateStringFromNode(bodyTextNode);

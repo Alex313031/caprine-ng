@@ -1,5 +1,5 @@
 {
-  "electronVersion": "22.3.27",
+  "electronVersion": "43.8.6",
   "files": [
     "**/*",
     "!media${/*}"
@@ -10,7 +10,7 @@
     "static/icon.ico"
   ],
   "appId": "com.alex313031.caprine",
-  "copyright": "Copyright © 2025 Alex313031",
+  "copyright": "Copyright © 2026 Alex313031",
   "mac": {
     "category": "public.app-category.social-networking",
     "icon": "build/icon.icns",

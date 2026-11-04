@@ -204,7 +204,8 @@ app.on('second-instance', () => {
 // Preserves the window position when a display is removed and Caprine is moved to a different screen.
 app.on('ready', () => {
 	electronScreen.on('display-removed', () => {
-		const [x, y] = mainWindow.getPosition();
+		// Electron always returns a `[x, y]` pair here.
+		const [x, y] = mainWindow.getPosition() as [number, number];
 		mainWindow.setPosition(x, y);
 	});
 });
@@ -221,7 +222,7 @@ async function updateBadge(messageCount: number): Promise<void> {
 			&& config.get('bounceDockOnMessage')
 			&& previousMessageCount !== messageCount
 		) {
-			app.dock.bounce('informational');
+			app.dock?.bounce('informational');
 			previousMessageCount = messageCount;
 		}
 	}
@@ -283,7 +284,7 @@ function enableHiresResources(): void {
 	session.defaultSession.webRequest.onBeforeSendHeaders(
 		filter,
 		(details: OnSendHeadersDetails, callback: (response: BeforeSendHeadersResponse) => void) => {
-			let cookie = details.requestHeaders.Cookie;
+			let cookie = details.requestHeaders['Cookie'];
 
 			if (cookie && details.method === 'GET') {
 				cookie = /(?:; )?dpr=\d/.test(cookie) ? cookie.replace(/dpr=\d/, `dpr=${scaleFactor}`) : `${cookie}; dpr=${scaleFactor}`;
@@ -333,7 +334,7 @@ function initRequestsFiltering(): void {
 
 		const callRingtoneHash = '2NAu/QVqg211BbktgY5GkA==';
 		callback({
-			cancel: responseHeaders['content-md5'][0] === callRingtoneHash,
+			cancel: responseHeaders['content-md5']?.[0] === callRingtoneHash,
 		});
 	});
 }
@@ -517,11 +518,11 @@ function createMainWindow(): BrowserWindow {
 		};
 
 		dockMenu = Menu.buildFromTemplate([firstItem]);
-		app.dock.setMenu(dockMenu);
+		app.dock?.setMenu(dockMenu);
 
 		// Dock icon is hidden initially on macOS
 		if (config.get('showDockIcon')) {
-			app.dock.show();
+			app.dock?.show();
 		}
 
 		ipc.once('conversations', () => {
@@ -544,7 +545,7 @@ function createMainWindow(): BrowserWindow {
 				},
 			}));
 
-			app.dock.setMenu(Menu.buildFromTemplate([firstItem, {type: 'separator'}, ...items]));
+			app.dock?.setMenu(Menu.buildFromTemplate([firstItem, {type: 'separator'}, ...items]));
 		});
 	}
 
@@ -738,32 +739,36 @@ app.on('activate', () => {
 	}
 });
 
-function getNewUserAgent() {
-	// Make them think we are on newer Chromium than M108 (◔_◔)
+function getNewUserAgent(): string {
+	// Strip the `Electron/x` and `caprine/x` tokens Messenger would otherwise see,
+	// and present ourselves as plain Chrome.
+	//
+	// The version is derived from the Chromium we actually ship rather than
+	// hardcoded, so it tracks every Electron bump instead of silently rotting
+	// the way the old pinned M124 string did. Real Chrome zeroes everything
+	// after the major in its reduced User-Agent, so mirror that exactly.
+	const [chromeMajor = '0'] = process.versions.chrome.split('.');
 	const archType = Os.arch();
-	let NewUserAgent;
+
+	let platform;
 	if (is.windows) {
-		// eslint-disable-next-line unicorn/prefer-switch
-		if (archType === 'x64') {
-			NewUserAgent = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		if (archType === 'arm64') {
+			platform = 'Windows NT 10.0; ARM64';
 		} else if (archType === 'ia32') {
-			NewUserAgent = 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
-		} else if (archType === 'arm64') {
-			NewUserAgent = 'Mozilla/5.0 (Windows NT 10.0; ARM64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+			platform = 'Windows NT 10.0; WOW64';
+		} else {
+			platform = 'Windows NT 10.0; Win64; x64';
 		}
 	} else if (is.linux) {
-		if (archType === 'x64') {
-			NewUserAgent = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
-		} else if (archType === 'arm64') {
-			NewUserAgent = 'Mozilla/5.0 (X11; Linux aarch64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
-		}
+		platform = archType === 'arm64' ? 'X11; Linux aarch64' : 'X11; Linux x86_64';
 	} else if (is.macos) {
-		NewUserAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		// Chrome reports this frozen version on every modern macOS.
+		platform = 'Macintosh; Intel Mac OS X 10_15_7';
 	} else {
-		NewUserAgent = 'Mozilla/5.0 (X11; CrOS x86_64 10066.0.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.6367.243 Safari/537.36';
+		platform = 'X11; CrOS x86_64 10066.0.0';
 	}
 
-	return NewUserAgent;
+	return `Mozilla/5.0 (${platform}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/${chromeMajor}.0.0.0 Safari/537.36`;
 }
 
 async function createPopOutWindow() {
@@ -793,9 +798,9 @@ app.on('popout-window', () => {
 });
 
 // @ts-expect-error
-app.on('relaunch-confirm', () => {
+app.on('relaunch-confirm', async () => {
 	// Dialog box asking if user really wants to relaunch app
-	dialog.showMessageBox(mainWindow, {
+	const {response} = await dialog.showMessageBox(mainWindow, {
 		type: 'question',
 		title: 'Relaunch Confirmation',
 		message: 'Are you sure you want to relaunch Caprine?',
@@ -803,17 +808,13 @@ app.on('relaunch-confirm', () => {
 			'Yes',
 			'No',
 		],
-	})
-	.then(result => {
-		if (result.response !== 0) {
-			return;
-		}
-
-		if (result.response === 0) {
-			app.relaunch();
-			app.quit();
-		}
 	});
+
+	// 'Yes' is the first button
+	if (response === 0) {
+		app.relaunch();
+		app.quit();
+	}
 });
 
 app.on('before-quit', () => {

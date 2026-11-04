@@ -136,7 +136,7 @@ ipc.answerMain('log-out', async () => {
 				'._54nq._9jo._558b._2n_z li:last-child a',
 			);
 
-			nodes[nodes.length - 1].click();
+			nodes[nodes.length - 1]?.click();
 		}, 250);
 	} else {
 		await withSettingsMenu(() => {
@@ -161,7 +161,7 @@ async function openSearchInConversation() {
 	const buttonList = document.querySelectorAll<HTMLElement>(selectors.rightSidebarButtons);
 
 	// Search in conversation is the last button
-	buttonList[buttonList.length - 1].click();
+	buttonList[buttonList.length - 1]?.click();
 }
 
 ipc.answerMain('search', () => {

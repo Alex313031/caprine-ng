@@ -11,7 +11,8 @@ import tray from './tray';
 
 export function getWindow(): BrowserWindow {
 	const [win] = BrowserWindow.getAllWindows();
-	return win;
+	// Every caller runs while the main window exists.
+	return win!;
 }
 
 export function sendAction<T>(action: string, arguments_?: T): void {

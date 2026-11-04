@@ -775,7 +775,7 @@ ${debugInfo()}`;
 		{
 			label: 'Show Versions',
 			click() {
-				let verWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+				let versionWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
 					title: 'Versions',
 					width: 280,
 					height: 190,
@@ -793,10 +793,10 @@ ${debugInfo()}`;
 						preload: path.join(__dirname, 'preload.js'),
 					},
 				});
-				require('@electron/remote/main').enable(verWindow.webContents);
-				verWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
-				verWindow.on('closed', () => {
-					verWindow = undefined;
+				require('@electron/remote/main').enable(versionWindow.webContents);
+				versionWindow.loadFile(path.join(__dirname, '..', 'static/versions.html'));
+				versionWindow.on('closed', () => {
+					versionWindow = undefined;
 				});
 			},
 		},
@@ -891,7 +891,7 @@ ${debugInfo()}`;
 		{
 			label: 'Open chrome://process-internals',
 			click() {
-				let procWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
+				let processWindow: Electron.CrossProcessExports.BrowserWindow | undefined = new BrowserWindow({
 					width: 1024,
 					height: 768,
 					useContentSize: true,
@@ -903,9 +903,9 @@ ${debugInfo()}`;
 						experimentalFeatures: true,
 					},
 				});
-				procWindow.loadURL('chrome://process-internals');
-				procWindow.on('closed', () => {
-					procWindow = undefined;
+				processWindow.loadURL('chrome://process-internals');
+				processWindow.on('closed', () => {
+					processWindow = undefined;
 				});
 			},
 		},

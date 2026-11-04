@@ -71,9 +71,12 @@ function getSpellCheckerLanguages(): MenuItemConstructorOptions[] {
 	}
 
 	for (const language of availableLanguages) {
+		// Fall back to the base language, so `en-GB` can match a plain `en` entry.
+		const [baseLanguage = language] = language.split('-');
+
 		languageItem.push(
 			{
-				label: languageToCode.get(language) ?? languageToCode.get(language.split('-')[0]) ?? language,
+				label: languageToCode.get(language) ?? languageToCode.get(baseLanguage) ?? language,
 				type: 'checkbox',
 				checked: languagesChecked.includes(language),
 				click() {

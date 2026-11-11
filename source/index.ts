@@ -584,7 +584,10 @@ function createMainWindow(): BrowserWindow {
 			webContents.insertCSS(readFileSync(path.join(app.getPath('userData'), 'custom.css'), 'utf8'));
 		}
 
-		if (config.get('launchMinimized') || app.getLoginItemSettings().wasOpenedAsHidden) {
+		// `wasOpenedAsHidden` was removed in Electron 44; it reported a macOS 12
+		// and below login-item state that no supported macOS version sets. The
+		// `launchMinimized` setting is the cross-platform equivalent.
+		if (config.get('launchMinimized')) {
 			mainWindow.hide();
 			tray.create(mainWindow);
 		} else {

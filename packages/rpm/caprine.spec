@@ -2,7 +2,7 @@
 %global _build_id_links alldebug
 
 Name:           caprine
-Version:        2.61.1
+Version:        2.61.2
 Release:        1%{?dist}
 Summary:        Elegant Facebook Messenger desktop app
 
@@ -57,6 +57,8 @@ install -Dm644 license %{buildroot}%{_datadir}/licenses/%{name}
 %{_datadir}/pixmaps/%{name}.png
 
 %changelog
+* Tue Nov 10 2026 Alex313031 <alex313031@gmail.com> - 2.61.2-1
+- Update Electron to custom 44.x build that supports Windows 7 and 32 bit again.
 * Wed Nov 4 2026 Alex313031 <alex313031@gmail.com> - 2.61.1-1
 - Update Electron and npm deps, type fixes.
 * Thu Jan 1 2026 mquevill <mquevill> - 2.61.0-1

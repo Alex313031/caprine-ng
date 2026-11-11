@@ -403,9 +403,11 @@ Press Command/Ctrl+R in Caprine to see your changes.
 			type: 'checkbox',
 			checked: app.getLoginItemSettings().openAtLogin,
 			click(menuItem) {
+				// `openAsHidden` was removed in Electron 44: it only ever worked on
+				// macOS 12 and below, which Electron no longer supports. On Windows it
+				// was always a no-op, and "Launch Minimized" covers that case there.
 				app.setLoginItemSettings({
 					openAtLogin: menuItem.checked,
-					openAsHidden: menuItem.checked,
 				});
 			},
 		},

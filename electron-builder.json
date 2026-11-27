@@ -1,7 +1,7 @@
 {
-  "electronVersion": "44.10.2",
+  "electronVersion": "44.11.5",
   "electronDownload": {
-    "version": "44.10.2",
+    "version": "44.11.5",
     "mirror": "https://github.com/Alex313031/electron-legacy/releases/download/v"
   },
   "files": [

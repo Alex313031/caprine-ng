@@ -8,20 +8,18 @@
 	<p>
 		<b>Elegant Facebook Messenger desktop app</b>
 	</p>
-	<br>
-	<br>
+	<p>
+		<b><em>This is a fork with support for legacy Windows (XP+) and minor enhancements.</em></b>
+	</p>
 	<p>
 		Caprine is an unofficial and privacy-focused Facebook Messenger app with many useful features.
 	</p>
-	<b>
-		Caprine is feature complete. However, we welcome contributions for improvements and bug fixes.
-	</b>
 	<br>
 		<a href="https://github.com/Alex313031/caprine-ng">
 		Website
 		</a>
 	<br>
-	<a href="https://github.com/sindresorhus/caprine/releases/latest">
+	<a href="https://github.com/Alex313031/caprine-ng/releases/latest">
 		<img src="media/screenshot.png" width="846">
 	</a>
 </div>
@@ -47,13 +45,13 @@
 
 ## Install
 
-*macOS 10.12+ (Intel and Apple Silicon), Linux (x64 and arm64), and Windows 7+ (64-bit and arm64) are supported.*
+*macOS 10.12+ (Intel and Apple Silicon), Linux (x64 and arm64), and Windows XP+ (32-bit and 64-bit) are supported.*
 
 Download the latest version on the [website](https://github.com/Alex313031/caprine-ng/releases/latest) or below.
 
 ### macOS
 
-[**Download**](https://github.com/sindresorhus/caprine/releases/latest) the `.dmg` file.
+[**Download**](https://github.com/Alex313031/caprine-ng/releases/latest) the `.dmg` file.
 
 Or with [Homebrew](https://brew.sh): `$ brew install caprine`
 
@@ -78,7 +76,7 @@ Or with [Homebrew](https://brew.sh): `$ brew install caprine`
 		<td align="center">❌</td>
 		<td>Official</td>
 		<td>
-			<a href="https://github.com/sindresorhus/caprine/releases/latest">Download</a> the .deb file
+			<a href="https://github.com/Alex313031/caprine-ng/releases/latest">Download</a> the .deb file
 		</td>
 	</tr>
 	<tr>
@@ -186,7 +184,7 @@ curl -s https://copr.fedorainfracloud.org/coprs/dusansimic/caprine/repo/opensuse
 
 #### AppImage:
 
-[Download](https://github.com/sindresorhus/caprine/releases/latest) the `.AppImage` file.
+[Download](https://github.com/Alex313031/caprine-ng/releases/latest) the `.AppImage` file.
 
 Make it [executable](https://discourse.appimage.org/t/how-to-run-an-appimage/80):
 
@@ -215,7 +213,7 @@ Then run it!
 		<td align="center">❌</td>
 		<td>Official</td>
 		<td>
-			<a href="https://github.com/sindresorhus/caprine/releases/latest">Download</a> the .exe file
+			<a href="https://github.com/Alex313031/caprine-ng/releases/latest">Download</a> the .exe file
 		</td>
 	</tr>
 	<tr>

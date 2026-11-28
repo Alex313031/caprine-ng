@@ -59,7 +59,7 @@
     "synopsis": "Elegant Facebook Messenger desktop app",
     "description": "Caprine is an unofficial and privacy focused Facebook Messenger app with many useful features.",
     "category": "Network;Chat",
-    "artifactName": "caprine_${version}_${arch}.${ext}",
+    "artifactName": "Caprine_${version}_linux_${arch}.${ext}",
     "desktop": {
       "Name": "Caprine",
       "StartupWMClass": "caprine",
